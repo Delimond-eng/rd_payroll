@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1059624768/android.android_multiple_identifier.iml" filepath="$PROJECT_DIR$/.idea/modules/-1059624768/android.android_multiple_identifier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/803323178/android.ota_update.iml" filepath="$PROJECT_DIR$/.idea/modules/803323178/android.ota_update.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/291167141/android.package_info.iml" filepath="$PROJECT_DIR$/.idea/modules/291167141/android.package_info.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/11777571/android.path_provider.iml" filepath="$PROJECT_DIR$/.idea/modules/11777571/android.path_provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-907930136/android.permission_handler.iml" filepath="$PROJECT_DIR$/.idea/modules/-907930136/android.permission_handler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-232954631/android.printing.iml" filepath="$PROJECT_DIR$/.idea/modules/-232954631/android.printing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-223187392/android.shared_preferences.iml" filepath="$PROJECT_DIR$/.idea/modules/-223187392/android.shared_preferences.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1377322317/android.speech_to_text.iml" filepath="$PROJECT_DIR$/.idea/modules/-1377322317/android.speech_to_text.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1627590642/android.syncfusion_flutter_pdfviewer.iml" filepath="$PROJECT_DIR$/.idea/modules/1627590642/android.syncfusion_flutter_pdfviewer.iml" />
+    </modules>
+  </component>
+</project>

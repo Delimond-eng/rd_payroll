@@ -1,0 +1,4 @@
+{
+    "terminal.integrated.fontSize": 15,
+    "dart.allowTestsOutsideTestFolder": true
+}
