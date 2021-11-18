@@ -1,0 +1,12 @@
+sk/fourq/otaupdate/BuildConfig.java
+ sk.fourq.otaupdate.BuildConfig
+sk/fourq/otaupdate/OtaUpdatePlugin.java
+ sk.fourq.otaupdate.OtaUpdatePlugin
+ sk.fourq.otaupdate.OtaUpdatePlugin$1
+ sk.fourq.otaupdate.OtaUpdatePlugin$2
+ sk.fourq.otaupdate.OtaUpdatePlugin$3
+ sk.fourq.otaupdate.OtaUpdatePlugin$OtaStatus
+sk/fourq/otaupdate/Sha256ChecksumValidator.java
+ sk.fourq.otaupdate.Sha256ChecksumValidator
+sk/fourq/otaupdate/OtaUpdateFileProvider.java
+ sk.fourq.otaupdate.OtaUpdateFileProvider

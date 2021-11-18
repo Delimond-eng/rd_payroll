@@ -1,0 +1,18 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/HZFINGER/HostUsb.java
+ com.HZFINGER.HostUsb
+ com.HZFINGER.HostUsb$1
+com/HZFINGER/HAPI.java
+ com.HZFINGER.HAPI
+ com.HZFINGER.HAPI$DATABASE
+com/HZ_FpStdSample/MainActivity.java
+ com.HZ_FpStdSample.MainActivity
+ com.HZ_FpStdSample.MainActivity$1
+ com.HZ_FpStdSample.MainActivity$OperationEnroll
+ com.HZ_FpStdSample.MainActivity$OperationScan
+ com.HZ_FpStdSample.MainActivity$ScreenBroadcastReceiver
+com/HZFINGER/LAPI.java
+ com.HZFINGER.LAPI
+com/HZ_FpStdSample/BuildConfig.java
+ com.HZ_FpStdSample.BuildConfig

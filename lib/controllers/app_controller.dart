@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -170,15 +169,9 @@ class AppController extends GetxController {
                                             });
                                           } else {
                                             Get.back();
-                                            onFailed();
-                                            XDialog.showConfirmation(
-                                                context: context,
-                                                icon: Icons.warning_rounded,
-                                                title: "Agent non reconnu",
-                                                content:
-                                                    "Cette empreinte ne se trouve pas dans la base de données!,\nVeuillez rechercher l'agent dans le système !");
                                             btnController.value.stop();
                                             appController.closeUsbDevice();
+                                            onFailed();
                                           }
                                         });
                                       } catch (err) {

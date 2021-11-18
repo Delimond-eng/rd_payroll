@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
-import 'package:medpad/pages/payments/payment_page_view.dart';
+import 'package:medpad/pages/payments/payment_page_scanning.dart';
 import 'package:medpad/pages/payments/payment_report_page.dart';
 import 'package:medpad/widgets/user_session.dart';
 

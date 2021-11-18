@@ -136,14 +136,17 @@ class XDialog {
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.amber[800]),
+          Icon(icon, color: Colors.amber[900]),
           SizedBox(
             width: 5,
           ),
           Text("$title"),
         ],
       ),
-      content: Text("$content"),
+      content: Text(
+        "$content",
+        textAlign: TextAlign.center,
+      ),
       actions: [
         continueButton,
         cancelButton,
@@ -167,17 +170,24 @@ class XDialog {
       IconData icon}) {
     // set up the buttons
     // ignore: deprecated_member_use
-    Widget cancelButton = FlatButton(
-      minWidth: MediaQuery.of(context).size.width / 2.60,
-      child: Text(
-        "OK",
-        style: GoogleFonts.mulish(
+    Widget cancelButton = Center(
+      child: FlatButton(
+        padding: EdgeInsets.all(10.0),
+        color: Colors.pink,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Text(
+          "OK",
+          style: GoogleFonts.mulish(
             fontWeight: FontWeight.w700,
             fontSize: 14,
             letterSpacing: 1.0,
-            color: Colors.red[400]),
+            color: Colors.white,
+          ),
+        ),
+        onPressed: onCancel ?? () => Get.back(),
       ),
-      onPressed: onCancel ?? () => Get.back(),
     );
 
     // set up the AlertDialog
@@ -196,7 +206,10 @@ class XDialog {
           Text("$title"),
         ],
       ),
-      content: Text("$content"),
+      content: Text(
+        "$content",
+        textAlign: TextAlign.center,
+      ),
       actions: [
         cancelButton,
       ],
