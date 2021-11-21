@@ -7,7 +7,6 @@ import 'package:medpad/constants/style.dart';
 import 'package:medpad/pages/agents/search_page.dart';
 import 'package:medpad/pages/pay_session_cancel_page.dart';
 import 'package:medpad/pages/payments/payment_page_scanning.dart';
-import 'package:medpad/pages/payments/payment_report_page.dart';
 import 'package:medpad/widgets/page_title.dart';
 import 'package:medpad/widgets/user_session.dart';
 import 'package:page_transition/page_transition.dart';
@@ -124,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icons.payments,
                           title: "Paiement agent",
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               PageTransition(
                                 type: PageTransitionType.leftToRightWithFade,
@@ -179,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           strIcon: "assets/svg/financial-statement.svg",
                           value:
                               "${apiController.user.value.montantReste.toDouble()} ${apiController.user.value.devise.toLowerCase()} ",
-                          color: Colors.green[700],
+                          color: bgColor,
                         ),
                         DashCard(
                           title: "Montant payé",
@@ -215,7 +214,7 @@ class HomeNavCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.zero,
         color: Colors.white,
         boxShadow: [
           BoxShadow(
@@ -227,7 +226,7 @@ class HomeNavCard extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.zero,
         child: InkWell(
           onTap: onPressed,
           child: Container(

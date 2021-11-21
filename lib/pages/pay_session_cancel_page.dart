@@ -124,42 +124,43 @@ class _PaySessionCancelPageState extends State<PaySessionCancelPage> {
                             ),
                           ),
                         ),
-                        Positioned(
-                          bottom: -8,
-                          right: -8,
-                          child: Container(
-                            height: 40.0,
-                            width: 40.0,
-                            decoration: BoxDecoration(
-                              color: Colors.red[200],
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(.3),
-                                  blurRadius: 12.0,
-                                  offset: const Offset(0, 3),
-                                )
-                              ],
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(50.0),
-                                onTap: () {
-                                  setter(() {
-                                    preuveImg = "";
-                                  });
-                                },
-                                child: Center(
-                                  child: Icon(
-                                    CupertinoIcons.minus,
-                                    color: Colors.red[800],
+                        if (preuveImg.isNotEmpty)
+                          Positioned(
+                            bottom: -8,
+                            right: -8,
+                            child: Container(
+                              height: 40.0,
+                              width: 40.0,
+                              decoration: BoxDecoration(
+                                color: Colors.red[200],
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(.3),
+                                    blurRadius: 12.0,
+                                    offset: const Offset(0, 3),
+                                  )
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  onTap: () {
+                                    setter(() {
+                                      preuveImg = "";
+                                    });
+                                  },
+                                  child: Center(
+                                    child: Icon(
+                                      CupertinoIcons.minus,
+                                      color: Colors.red[800],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
+                          )
                       ],
                     ),
                     SizedBox(
