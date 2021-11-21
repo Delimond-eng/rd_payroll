@@ -54,8 +54,12 @@ class _AuthInputTextState extends State<AuthInputText> {
                   width: 60.0,
                   height: 50.0,
                   decoration: BoxDecoration(
-                      color: bgColor,
-                      borderRadius: BorderRadius.circular(20.0)),
+                    color: bgColor,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0),
+                    ),
+                  ),
                   child: Icon(
                     widget.icon,
                     color: Colors.white,
@@ -81,7 +85,10 @@ class _AuthInputTextState extends State<AuthInputText> {
                       width: 60.0,
                       decoration: BoxDecoration(
                         color: bgColor,
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20.0),
+                          topLeft: Radius.circular(20.0),
+                        ),
                       ),
                       child: Icon(CupertinoIcons.lock,
                           size: 20.0, color: Colors.white)),

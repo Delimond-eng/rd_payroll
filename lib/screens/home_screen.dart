@@ -6,7 +6,9 @@ import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/pages/payments/payment_page_scanning.dart';
 import 'package:medpad/pages/payments/payment_report_page.dart';
+import 'package:medpad/widgets/page_title.dart';
 import 'package:medpad/widgets/user_session.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'widgets/dash_card.dart';
 
@@ -29,17 +31,53 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: Row(
           children: [
+            PageTitle(),
+            SizedBox(
+              width: 4.0,
+            ),
             Icon(
-              Icons.payment,
+              Icons.arrow_right_alt_rounded,
               color: Colors.white,
             ),
-            const SizedBox(
-              width: 8.0,
+            SizedBox(
+              width: 4.0,
             ),
-            Text("RD Payroll")
+            Text(
+              "Agence de Kolwezi",
+              style: GoogleFonts.lato(
+                fontSize: 18.0,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
-        actions: [UserBox()],
+        actions: [
+          Container(
+            padding: EdgeInsets.all(8),
+            // ignore: deprecated_member_use
+            child: RaisedButton.icon(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              icon: Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 15,
+              ),
+              label: Text(
+                "cloturer la session de paiement",
+                style: GoogleFonts.lato(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {},
+              color: Colors.orange,
+            ),
+          ),
+          UserBox()
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -78,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => PaymentPageView(),
+                              PageTransition(
+                                type: PageTransitionType.leftToRightWithFade,
+                                child: PaymentPageView(),
                               ),
                             );
                           },
@@ -95,8 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () async {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => PaymentReportPage(),
+                              PageTransition(
+                                type: PageTransitionType.bottomToTop,
+                                child: PaymentReportPage(),
                               ),
                             );
                           },
@@ -107,39 +147,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Expanded(child: Obx(() {
                   return Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: GridView(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.0, vertical: 10.0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 1.20,
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 20.0,
+                        mainAxisSpacing: 20.0,
+                      ),
                       children: [
                         DashCard(
                           title: "Montant alloué",
-                          icon: Icons.add_chart,
-                          clIndex: 4,
+                          strIcon: "assets/svg/financial-growth.svg",
+                          color: bgColor,
                           value:
-                              "${apiController.user.value.montant} ${apiController.user.value.devise}",
-                        ),
-                        SizedBox(
-                          width: 20.0,
+                              "${apiController.user.value.montant.toDouble()} ${apiController.user.value.devise.toLowerCase()}",
                         ),
                         DashCard(
                           title: "Montant restant",
-                          icon: Icons.bar_chart_sharp,
+                          strIcon: "assets/svg/financial-statement.svg",
                           value:
-                              "${apiController.user.value.montantReste} ${apiController.user.value.devise} ",
-                          clIndex: 5,
-                        ),
-                        SizedBox(
-                          width: 20.0,
+                              "${apiController.user.value.montantReste.toDouble()} ${apiController.user.value.devise.toLowerCase()} ",
+                          color: Colors.green[700],
                         ),
                         DashCard(
                           title: "Montant payé",
-                          icon: CupertinoIcons.chart_bar_circle,
-                          value: "$pAmount ${apiController.user.value.devise} ",
-                          clIndex: 5,
+                          strIcon: "assets/svg/payroll-salary.svg",
+                          value:
+                              "${pAmount.toDouble()} ${apiController.user.value.devise.toLowerCase()} ",
+                          color: Colors.grey[800],
                         ),
                       ],
                     ),
@@ -167,46 +204,43 @@ class HomeNavCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Card(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5.0),
         color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        elevation: 0,
-        child: Material(
-          color: Colors.white,
-          child: InkWell(
-            splashColor: Colors.cyan,
-            onTap: onPressed,
-            child: Container(
-              height: 100.0,
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(.3),
-                    blurRadius: 12.0,
-                    offset: const Offset(0, 3),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(.3),
+            blurRadius: 12.0,
+            offset: const Offset(0, 3),
+          )
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(5.0),
+        child: InkWell(
+          onTap: onPressed,
+          child: Container(
+            height: 100.0,
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.all(10.0),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(icon, color: bgColor, size: 30),
+                  SizedBox(
+                    width: 20.0,
+                  ),
+                  Text(
+                    title,
+                    style: GoogleFonts.mulish(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.0,
+                    ),
                   )
                 ],
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(icon, color: bgColor, size: 30),
-                    SizedBox(
-                      width: 20.0,
-                    ),
-                    Text(
-                      title,
-                      style: GoogleFonts.mulish(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18.0,
-                      ),
-                    )
-                  ],
-                ),
               ),
             ),
           ),

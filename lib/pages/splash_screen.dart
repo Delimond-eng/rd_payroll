@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:medpad/constants/style.dart';
-import 'package:medpad/helpers/data_storage.dart';
 import 'package:medpad/pages/auth/authenticate_page_route.dart';
 import 'package:medpad/services/db_helper_service.dart';
+
+import 'package:medpad/widgets/page_title.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -26,22 +25,22 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Container(
-          height: 120,
-          width: 120.0,
-          padding: EdgeInsets.all(10.0),
+          height: 100.0,
+          width: 150.0,
+          padding: EdgeInsets.all(5.0),
           decoration: BoxDecoration(
-            color: bgColor,
+            color: Colors.blue[900],
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(
                 blurRadius: 12.0,
-                color: Colors.grey.withOpacity(.3),
+                color: Colors.black.withOpacity(.3),
                 offset: const Offset(0, 3),
               )
             ],
           ),
-          child: SpinKitCubeGrid(
-            color: Colors.white,
+          child: Center(
+            child: PageTitle(),
           ),
         ),
       ),
@@ -50,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> loadDataEndGo() async {
     await DBHelper.initDb();
-    Navigator.pushReplacement(
+    await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => AuthenticationPageRoute(),

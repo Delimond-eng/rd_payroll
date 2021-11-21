@@ -277,174 +277,16 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Flexible(
-                                      child: Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                          height: 50,
-                                          padding: EdgeInsets.only(right: 10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: bgColor, width: 1.0),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                height: 50.0,
-                                                width: 100.0,
-                                                padding: EdgeInsets.all(15.0),
-                                                color: bgColor,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Mois",
-                                                    style: GoogleFonts.mulish(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                child: DropdownButton<String>(
-                                                  menuMaxHeight: 300,
-                                                  dropdownColor: Colors.white,
-                                                  value: selectedMonth,
-                                                  underline: SizedBox(),
-                                                  hint: Text(
-                                                    " mois",
-                                                    style: GoogleFonts.mulish(
-                                                        color: Colors.grey[400],
-                                                        fontSize: 14.0,
-                                                        fontStyle:
-                                                            FontStyle.italic),
-                                                  ),
-                                                  isExpanded: true,
-                                                  items: [
-                                                    "Janvier",
-                                                    "Février",
-                                                    "Mars",
-                                                    "Avril",
-                                                    "Mai",
-                                                    "Juin",
-                                                    "Juillet",
-                                                    "Septembre",
-                                                    "Octobre",
-                                                    "Novembre",
-                                                    "Décembre"
-                                                  ].map((e) {
-                                                    return DropdownMenuItem<
-                                                            String>(
-                                                        value: e,
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 8,
-                                                            ),
-                                                            Text(
-                                                              "$e",
-                                                              style: GoogleFonts.mulish(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400),
-                                                            ),
-                                                          ],
-                                                        ));
-                                                  }).toList(),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      selectedMonth = value;
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                    CalendarField(
+                                      title: "Mois",
+                                      value: "Janvier",
                                     ),
                                     SizedBox(
                                       width: 20.0,
                                     ),
-                                    Flexible(
-                                      child: Container(
-                                        child: Container(
-                                          height: 50,
-                                          padding: EdgeInsets.only(right: 10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: bgColor, width: 1.0),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                height: 50.0,
-                                                width: 100,
-                                                padding: EdgeInsets.all(15.0),
-                                                color: bgColor,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Année",
-                                                    style: GoogleFonts.mulish(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                child: DropdownButton<String>(
-                                                  menuMaxHeight: 300,
-                                                  dropdownColor: Colors.white,
-                                                  value: selectedYear,
-                                                  underline: SizedBox(),
-                                                  hint: Text(
-                                                    " année",
-                                                    style: GoogleFonts.mulish(
-                                                        color: Colors.grey[400],
-                                                        fontSize: 14.0,
-                                                        fontStyle:
-                                                            FontStyle.italic),
-                                                  ),
-                                                  isExpanded: true,
-                                                  items: [
-                                                    "2021",
-                                                    "2022",
-                                                  ].map((e) {
-                                                    return DropdownMenuItem<
-                                                            String>(
-                                                        value: e,
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 8,
-                                                            ),
-                                                            Text(
-                                                              "$e",
-                                                              style: GoogleFonts.mulish(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400),
-                                                            ),
-                                                          ],
-                                                        ));
-                                                  }).toList(),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      selectedYear = value;
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                    CalendarField(
+                                      title: "Année",
+                                      value: "2021",
                                     ),
                                   ],
                                 ),
@@ -498,7 +340,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                           ),
                           child: Row(
                             children: [
-                              Icon(CupertinoIcons.photo_camera,
+                              Icon(CupertinoIcons.photo_fill,
                                   color: Colors.white, size: 15.0),
                               SizedBox(
                                 width: 8.0,
@@ -547,7 +389,6 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                   Container(
                     height: 80.0,
                     width: MediaQuery.of(context).size.width,
-
                     // ignore: deprecated_member_use
                     child: RaisedButton.icon(
                       elevation: 10.0,
@@ -556,7 +397,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                         Icons.check,
                         color: Colors.white,
                       ),
-                      color: bgColor,
+                      color: Colors.green[700],
                       label: Text(
                         "Payer".toUpperCase(),
                         style: GoogleFonts.mulish(
@@ -715,6 +556,55 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
       XDialog.showErrorMessage(context,
           title: "Echec", message: "Paiement non effectué! $err");
     }
+  }
+}
+
+class CalendarField extends StatelessWidget {
+  final String title;
+  final String value;
+  const CalendarField({
+    Key key,
+    this.title,
+    this.value,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        alignment: Alignment.topLeft,
+        child: Container(
+          height: 50,
+          padding: EdgeInsets.only(right: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: bgColor, width: 1.0),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 50.0,
+                width: 100.0,
+                padding: EdgeInsets.all(15.0),
+                color: bgColor,
+                child: Center(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.mulish(color: Colors.white),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(value),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

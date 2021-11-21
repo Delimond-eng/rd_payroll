@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medpad/constants/style.dart';
 
@@ -8,27 +9,25 @@ class DashCard extends StatelessWidget {
   final String strIcon;
   final String title;
   final String value;
-  final int clIndex;
+  final Color color;
 
-  DashCard(
-      {Key key,
-      this.icon,
-      this.title,
-      this.strIcon,
-      this.clIndex = 0,
-      this.value})
-      : super(key: key);
+  DashCard({
+    Key key,
+    this.icon,
+    this.title,
+    this.strIcon,
+    this.value,
+    this.color,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250.0,
-      width: 250.0,
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(20.0),
+        color: color,
+        borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black38,
+            color: Colors.black.withOpacity(.3),
             blurRadius: 12.0,
             offset: const Offset(0, 3),
           )
@@ -45,15 +44,23 @@ class DashCard extends StatelessWidget {
             Expanded(
               child: Container(
                 height: 80,
-                width: 80,
+                width: 100,
+                padding: EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: secondaryColor.withOpacity(.2),
                 ),
-                child: Icon(
-                  icon,
-                  color: Colors.cyan[50],
-                  size: 50.0,
-                ),
+                child: strIcon == null
+                    ? Icon(
+                        icon,
+                        color: Colors.cyan[50],
+                        size: 50.0,
+                      )
+                    : Center(
+                        child: SvgPicture.asset(
+                          strIcon,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
             ),
             SizedBox(
@@ -75,7 +82,7 @@ class DashCard extends StatelessWidget {
                 style: GoogleFonts.mulish(
                     fontWeight: FontWeight.w900,
                     color: Colors.cyan[50],
-                    fontSize: 20.0),
+                    fontSize: 25.0),
               ),
             )
           ],

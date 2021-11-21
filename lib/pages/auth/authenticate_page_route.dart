@@ -10,7 +10,7 @@ import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/data_storage.dart';
 import 'package:medpad/helpers/utilities.dart';
 import 'package:medpad/models/user_model.dart';
-import 'package:medpad/screens/home_screen.dart';
+import 'package:medpad/screens/agence_view_screen.dart';
 import 'package:medpad/services/db_helper_service.dart';
 import 'package:medpad/widgets/auth_input_text_widget.dart';
 import 'package:page_transition/page_transition.dart';
@@ -260,7 +260,8 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
             Navigator.pushAndRemoveUntil(
               context,
               PageTransition(
-                  child: HomeScreen(), type: PageTransitionType.bottomToTop),
+                  child: AgenceViewScreen(),
+                  type: PageTransitionType.bottomToTop),
               (route) => false,
             );
           });

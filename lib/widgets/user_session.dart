@@ -19,8 +19,7 @@ class UserBox extends StatelessWidget {
         height: 50.0,
         padding: const EdgeInsets.only(right: 10.0),
         decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(.6),
-            borderRadius: BorderRadius.circular(2)),
+            color: Colors.green[700], borderRadius: BorderRadius.circular(5)),
         child: Row(
           children: [
             Container(
@@ -29,12 +28,7 @@ class UserBox extends StatelessWidget {
               width: 45.0,
               decoration: BoxDecoration(
                 color: Colors.grey[100],
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(2),
-                  bottomLeft: Radius.circular(2),
-                  bottomRight: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
-                ),
+                borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(.4),
@@ -49,6 +43,7 @@ class UserBox extends StatelessWidget {
                   child: Icon(
                     CupertinoIcons.person,
                     color: bgColor,
+                    size: 18.0,
                   ),
                 ),
               ),
@@ -68,22 +63,24 @@ class UserBox extends StatelessWidget {
                         apiController.user.value.nom.capitalizeFirst,
                         style: GoogleFonts.lato(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: 15.0,
                             letterSpacing: 1.0,
                             fontWeight: FontWeight.w400),
                       ),
                       Text(
-                        "agent payeur",
+                        "agent payeur".toUpperCase(),
                         style: GoogleFonts.lato(
-                          fontSize: 10,
+                          fontSize: 9,
                           fontWeight: FontWeight.w400,
+                          color: Colors.green[300],
                         ),
                       )
                     ],
                   ),
                 ),
               );
-            })
+            }),
+            Icon(Icons.more_vert_rounded)
           ],
         ),
       ),

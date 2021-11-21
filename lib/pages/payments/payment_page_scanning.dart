@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
-import 'package:medpad/helpers/utilities.dart';
 import 'package:medpad/pages/agents/search_page.dart';
 
 import 'package:medpad/pages/payments/payment_make_page.dart';
@@ -58,9 +57,10 @@ class _PaymentPageViewState extends State<PaymentPageView> {
                             borderRadius: BorderRadius.circular(20.0),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20.0),
-                              onTap: () {
-                                //apiController.findClientByFingerId(fingerId: 1);
-                                Navigator.push(
+                              onTap: () async {
+                                await apiController.findClientByFingerId(
+                                    fingerId: 1);
+                                await Navigator.push(
                                   context,
                                   PageTransition(
                                     child: PaymentFoundPage(),
