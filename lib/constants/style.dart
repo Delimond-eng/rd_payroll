@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 Color light = Color(0xFFF7F8FC);
@@ -71,4 +72,18 @@ List<String> gStrSplitParser(String date) {
   String name = date;
   var strList = name.split(new RegExp(r"[,|]"));
   return strList;
+}
+
+Future<PickedFile> takePhoto() async {
+  final ImagePicker _picker = ImagePicker();
+  // ignore: deprecated_member_use
+  final pickedFile = await _picker.getImage(
+      source: ImageSource.camera,
+      maxHeight: 400,
+      maxWidth: 400,
+      imageQuality: 70);
+
+  if (pickedFile != null) {
+    return pickedFile;
+  }
 }

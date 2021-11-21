@@ -39,20 +39,6 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
   String preuve3 = "";
   String preuve4 = "";
 
-  Future<PickedFile> takePhoto() async {
-    final ImagePicker _picker = ImagePicker();
-    // ignore: deprecated_member_use
-    final pickedFile = await _picker.getImage(
-        source: ImageSource.camera,
-        maxHeight: 200,
-        maxWidth: 200,
-        imageQuality: 50);
-
-    if (pickedFile != null) {
-      return pickedFile;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

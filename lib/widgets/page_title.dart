@@ -24,12 +24,13 @@ class PageTitle extends StatelessWidget {
             style: GoogleFonts.lato(
               letterSpacing: 1,
               color: Colors.blue,
+              fontWeight: FontWeight.w900,
             ),
           ),
           TextSpan(
             text: 'PayRoll',
             style: GoogleFonts.lato(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w800,
               color: Colors.cyan,
             ),
           ),

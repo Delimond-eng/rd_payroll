@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
+import 'package:medpad/pages/agents/search_page.dart';
+import 'package:medpad/pages/pay_session_cancel_page.dart';
 import 'package:medpad/pages/payments/payment_page_scanning.dart';
 import 'package:medpad/pages/payments/payment_report_page.dart';
 import 'package:medpad/widgets/page_title.dart';
@@ -62,17 +64,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(5.0),
               ),
               icon: Icon(
-                Icons.close,
+                Icons.warning_amber_rounded,
                 color: Colors.white,
                 size: 15,
               ),
               label: Text(
-                "cloturer la session de paiement",
+                "Cloturer la session de paiement",
                 style: GoogleFonts.lato(
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.leftToRightWithFade,
+                    child: PaySessionCancelPage(),
+                  ),
+                );
+              },
               color: Colors.orange,
             ),
           ),
@@ -136,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               PageTransition(
                                 type: PageTransitionType.bottomToTop,
-                                child: PaymentReportPage(),
+                                child: SearchPage(),
                               ),
                             );
                           },
