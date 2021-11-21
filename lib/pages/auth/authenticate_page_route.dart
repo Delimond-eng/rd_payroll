@@ -13,6 +13,7 @@ import 'package:medpad/models/user_model.dart';
 import 'package:medpad/screens/agence_view_screen.dart';
 import 'package:medpad/services/db_helper_service.dart';
 import 'package:medpad/widgets/auth_input_text_widget.dart';
+import 'package:medpad/widgets/page_title.dart';
 import 'package:page_transition/page_transition.dart';
 
 class AuthenticationPageRoute extends StatefulWidget {
@@ -37,191 +38,207 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
   Widget build(BuildContext context) {
     var _size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-            height: _size.height,
-            width: _size.width,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        elevation: 0,
+        title: PageTitle(
+          fontSize: 20.0,
+        ),
+        centerTitle: true,
+      ),
+      body: Container(
+          height: _size.height,
+          width: _size.width,
+          child: Container(
             decoration: BoxDecoration(
+              color: Colors.transparent,
               image: DecorationImage(
-                image: AssetImage("assets/images/bg.jpg"),
+                image: AssetImage("assets/images/bg.png"),
                 fit: BoxFit.fill,
               ),
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(.9),
+                gradient: LinearGradient(
+                    colors: [Colors.transparent, Colors.white.withOpacity(.8)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
               ),
-              child: Center(
-                child: Container(
-                  alignment: Alignment.center,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.only(top: 30.0),
-                    physics: BouncingScrollPhysics(),
-                    child: Stack(
-                      overflow: Overflow.visible,
-                      children: [
-                        Container(
-                          width: _size.width / 2.10,
-                          decoration: BoxDecoration(color: Colors.transparent),
-                          child: Card(
-                            color: Colors.white.withOpacity(.9),
-                            elevation: 10.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            shadowColor: Colors.black54,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 60.0,
-                                  left: 20.0,
-                                  right: 20.0,
-                                  bottom: 20.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  AuthInputText(
-                                    hintText: "Adresse e-mail",
-                                    icon: CupertinoIcons.person,
-                                    keyType: TextInputType.emailAddress,
-                                    isPassWord: false,
-                                    inputController: textEmail,
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  AuthInputText(
-                                    hintText: "Mot de passe",
-                                    icon: CupertinoIcons.lock,
-                                    keyType: TextInputType.emailAddress,
-                                    isPassWord: true,
-                                    inputController: textPass,
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Container(
-                                    height: 60.0,
-                                    width: _size.width,
-                                    // ignore: deprecated_member_use
-                                    child: RaisedButton.icon(
-                                      elevation: 10.0,
-                                      color: bgColor,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30.0)),
-                                      onPressed: login,
-                                      icon: Icon(
-                                        Icons.arrow_right_alt_rounded,
-                                        size: 18.0,
-                                        color: Colors.white,
-                                      ),
-                                      label: Text(
-                                        "CONNECTER",
-                                        style: GoogleFonts.mulish(
+              child: SafeArea(
+                child: Center(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(top: 30.0),
+                      physics: BouncingScrollPhysics(),
+                      child: Stack(
+                        overflow: Overflow.visible,
+                        children: [
+                          Container(
+                            width: _size.width / 2.10,
+                            decoration:
+                                BoxDecoration(color: Colors.transparent),
+                            child: Card(
+                              color: Colors.white.withOpacity(.9),
+                              elevation: 20.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
+                              shadowColor: Colors.black,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 60.0,
+                                    left: 20.0,
+                                    right: 20.0,
+                                    bottom: 20.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    AuthInputText(
+                                      hintText: "Adresse e-mail",
+                                      icon: CupertinoIcons.person,
+                                      keyType: TextInputType.emailAddress,
+                                      isPassWord: false,
+                                      inputController: textEmail,
+                                    ),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    AuthInputText(
+                                      hintText: "Mot de passe",
+                                      icon: CupertinoIcons.lock,
+                                      keyType: TextInputType.emailAddress,
+                                      isPassWord: true,
+                                      inputController: textPass,
+                                    ),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Container(
+                                      height: 60.0,
+                                      width: _size.width,
+                                      // ignore: deprecated_member_use
+                                      child: RaisedButton.icon(
+                                        elevation: 10.0,
+                                        color: bgColor,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                        onPressed: login,
+                                        icon: Icon(
+                                          Icons.arrow_right_alt_rounded,
+                                          size: 18.0,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: 2.0,
+                                        ),
+                                        label: Text(
+                                          "CONNECTER",
+                                          style: GoogleFonts.mulish(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 2.0,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          top: -30,
-                          left: 10,
-                          right: 10,
-                          child: Container(
-                            height: 80.0,
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              color: bgColor,
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0)),
-                              shadowColor: Colors.black87,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Center(
-                                      child: Text(
-                                        "AUTHENTIFICATION",
-                                        style: GoogleFonts.mulish(
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: 1.50),
+                          Positioned(
+                            top: -30,
+                            left: 10,
+                            right: 10,
+                            child: Container(
+                              height: 80.0,
+                              width: MediaQuery.of(context).size.width,
+                              child: Card(
+                                color: bgColor,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0)),
+                                shadowColor: Colors.black87,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Center(
+                                        child: Text(
+                                          "AUTHENTIFICATION",
+                                          style: GoogleFonts.mulish(
+                                              color: Colors.white,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 1.50),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 80.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    width: 200,
-                                    child: FlatButton(
-                                      splashColor: Colors.grey[50],
+                                    Container(
                                       height: 80.0,
-                                      color: Colors.grey[100],
-                                      onPressed: () async {
-                                        //appController.showScan(context);
-                                        await DBHelper.getPaymentReporting()
-                                            .then((value) {
-                                          print(value);
-                                        });
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30.0)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8.0),
-                                            alignment: Alignment.center,
-                                            child: Lottie.asset(
-                                              "assets/lotties/4771-finger-print.json",
-                                              width: 50.0,
-                                              height: 50.0,
-                                              reverse: true,
-                                              fit: BoxFit.cover,
-                                              animate: true,
-                                            ),
-                                          ),
-                                          Text(
-                                            "SCANNER",
-                                            style: GoogleFonts.mulish(
-                                              color: Colors.blue[700],
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1.0,
-                                              fontSize: 16.0,
-                                            ),
-                                          ),
-                                        ],
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                      width: 200,
+                                      child: FlatButton(
+                                        splashColor: Colors.grey[50],
+                                        height: 80.0,
+                                        color: Colors.grey[100],
+                                        onPressed: () async {
+                                          //appController.showScan(context);
+                                          await DBHelper.getPaymentReporting()
+                                              .then((value) {
+                                            print(value);
+                                          });
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(8.0),
+                                              alignment: Alignment.center,
+                                              child: Lottie.asset(
+                                                "assets/lotties/4771-finger-print.json",
+                                                width: 50.0,
+                                                height: 50.0,
+                                                reverse: true,
+                                                fit: BoxFit.cover,
+                                                animate: true,
+                                              ),
+                                            ),
+                                            Text(
+                                              "SCANNER",
+                                              style: GoogleFonts.mulish(
+                                                color: Colors.blue[700],
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: 1.0,
+                                                fontSize: 16.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            )),
-      ),
+            ),
+          )),
     );
   }
 

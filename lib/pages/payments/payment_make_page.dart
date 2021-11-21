@@ -34,6 +34,11 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
 
   String preuveCapture = "";
 
+  String preuve1 = "";
+  String preuve2 = "";
+  String preuve3 = "";
+  String preuve4 = "";
+
   Future<PickedFile> takePhoto() async {
     final ImagePicker _picker = ImagePicker();
     // ignore: deprecated_member_use
@@ -305,6 +310,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                                     hintText: "Entrer montant",
                                     keyType: TextInputType.number,
                                     isWithSelectable: true,
+                                    currency: "FC",
                                   ),
                                 ),
                               ),
@@ -350,34 +356,106 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                child: CaptureTile(),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Scrollbar(
+                              thickness: 5,
+                              radius: Radius.circular(10.0),
+                              child: GridView(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  childAspectRatio: 1.10,
+                                  crossAxisCount: 4,
+                                  crossAxisSpacing: 10.0,
+                                  mainAxisSpacing: 10.0,
+                                ),
+                                children: [
+                                  StatefulBuilder(
+                                    builder: (context, setter) => CaptureTile(
+                                      title: "Preuve de la carte d'identité",
+                                      tileHeaderColor: Colors.red[400],
+                                      onCaptured: () async {
+                                        var byteImage = await takePhoto();
+                                        var i = await byteImage.readAsBytes();
+                                        if (byteImage != null) {
+                                          setter(() {
+                                            preuve1 = base64Encode(i);
+                                          });
+                                        }
+                                      },
+                                      onCanceled: () {
+                                        setter(() {
+                                          preuve1 = '';
+                                        });
+                                      },
+                                      b64Image: preuve1,
+                                    ),
+                                  ),
+                                  StatefulBuilder(
+                                    builder: (context, setter) => CaptureTile(
+                                      title: "Autre",
+                                      onCaptured: () async {
+                                        var byteImage = await takePhoto();
+                                        var i = await byteImage.readAsBytes();
+                                        if (byteImage != null) {
+                                          setter(() {
+                                            preuve2 = base64Encode(i);
+                                          });
+                                        }
+                                      },
+                                      onCanceled: () {
+                                        setter(() {
+                                          preuve2 = '';
+                                        });
+                                      },
+                                      b64Image: preuve2,
+                                    ),
+                                  ),
+                                  StatefulBuilder(
+                                    builder: (context, setter) => CaptureTile(
+                                      title: "Autre",
+                                      onCaptured: () async {
+                                        var byteImage = await takePhoto();
+                                        var i = await byteImage.readAsBytes();
+                                        if (byteImage != null) {
+                                          setter(() {
+                                            preuve3 = base64Encode(i);
+                                          });
+                                        }
+                                      },
+                                      onCanceled: () {
+                                        setter(() {
+                                          preuve3 = '';
+                                        });
+                                      },
+                                      b64Image: preuve3,
+                                    ),
+                                  ),
+                                  StatefulBuilder(
+                                    builder: (context, setter) => CaptureTile(
+                                      title: "Autre",
+                                      onCaptured: () async {
+                                        var byteImage = await takePhoto();
+                                        var i = await byteImage.readAsBytes();
+                                        if (byteImage != null) {
+                                          setter(() {
+                                            preuve4 = base64Encode(i);
+                                          });
+                                        }
+                                      },
+                                      onCanceled: () {
+                                        setter(() {
+                                          preuve4 = '';
+                                        });
+                                      },
+                                      b64Image: preuve4,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Flexible(
-                                child: CaptureTile(),
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Flexible(
-                                child: CaptureTile(),
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Flexible(
-                                child: CaptureTile(),
-                              ),
-                            ],
+                            ),
                           ),
                         )
                       ],
@@ -397,7 +475,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                         Icons.check,
                         color: Colors.white,
                       ),
-                      color: Colors.green[700],
+                      color: bgColor,
                       label: Text(
                         "Payer".toUpperCase(),
                         style: GoogleFonts.mulish(
@@ -597,7 +675,8 @@ class CalendarField extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12.0),
                 child: Text(value),
               ),
             ],
@@ -609,44 +688,101 @@ class CalendarField extends StatelessWidget {
 }
 
 class CaptureTile extends StatelessWidget {
+  final String title;
+  final String b64Image;
+  final Color tileHeaderColor;
+  final Function onCaptured;
+  final Function onCanceled;
   const CaptureTile({
     Key key,
+    this.title,
+    this.b64Image = "",
+    this.tileHeaderColor,
+    this.onCaptured,
+    this.onCanceled,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 210,
-      width: MediaQuery.of(context).size.width,
-      color: Colors.black.withOpacity(.4),
-      child: Column(
-        children: [
-          Flexible(
-            child: Container(
-              height: 30.0,
-              color: Colors.blue[900],
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text("Preuve de la carte d'identité",
+    return Stack(
+      children: [
+        Container(
+          child: Column(
+            children: [
+              Container(
+                height: 40.0,
+                color: (b64Image.isNotEmpty)
+                    ? Colors.green[700]
+                    : (tileHeaderColor == null)
+                        ? bgColor
+                        : tileHeaderColor,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    title,
                     style:
-                        GoogleFonts.lato(color: Colors.white, fontSize: 14.0)),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(top: 30.0),
-              child: Center(
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 30.0,
+                        GoogleFonts.lato(color: Colors.white, fontSize: 14.0),
+                  ),
                 ),
               ),
-            ),
+              Expanded(
+                child: Container(
+                  decoration: b64Image.isEmpty
+                      ? BoxDecoration(
+                          color: Colors.black.withOpacity(.4),
+                        )
+                      : BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: MemoryImage(
+                              base64Decode(b64Image),
+                            ),
+                          ),
+                        ),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.zero,
+                    child: InkWell(
+                      onTap: onCaptured,
+                      child: Center(
+                        child: b64Image.isEmpty
+                            ? Icon(
+                                Icons.add_a_photo_rounded,
+                                color: Colors.white,
+                                size: 30.0,
+                              )
+                            : Container(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (b64Image.isNotEmpty)
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              color: Colors.red[200],
+              child: Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.zero,
+                child: InkWell(
+                    onTap: onCanceled,
+                    child: Container(
+                      height: 30.0,
+                      width: 30.0,
+                      child: Center(
+                        child: Icon(Icons.clear,
+                            size: 15.0, color: Colors.red[800]),
+                      ),
+                    )),
+              ),
+            ),
+          )
+      ],
     );
   }
 }

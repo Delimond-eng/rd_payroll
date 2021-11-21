@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PageTitle extends StatelessWidget {
-  final String title;
-  final IconData icon;
+  final double fontSize;
 
-  const PageTitle({Key key, this.title, this.icon}) : super(key: key);
+  const PageTitle({Key key, this.fontSize}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
         style: GoogleFonts.lato(
-          fontSize: 22.0,
+          fontSize: fontSize == null ? 22.0 : fontSize,
           color: Colors.white,
           fontWeight: FontWeight.w900,
           shadows: [

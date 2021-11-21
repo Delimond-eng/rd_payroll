@@ -15,6 +15,7 @@ class InputText extends StatelessWidget {
   final bool readOnly;
   final double radius;
   final bool isWithSelectable;
+  final String currency;
   String devise;
 
   InputText({
@@ -28,6 +29,7 @@ class InputText extends StatelessWidget {
     this.readOnly = false,
     this.radius,
     this.isWithSelectable = false,
+    this.currency,
   }) : super(key: key);
 
   @override
@@ -85,60 +87,24 @@ class InputText extends StatelessWidget {
                 contentPadding: EdgeInsets.only(top: 15, bottom: 10),
                 hintStyle: TextStyle(color: Colors.black38),
                 icon: Container(
-                    padding: EdgeInsets.only(right: 8),
-                    height: 50.0,
-                    width: 100,
-                    decoration: BoxDecoration(color: bgColor),
-                    child: Center(
-                      child: Text("montant",
-                          style: GoogleFonts.lato(
-                            color: Colors.white,
-                          )),
-                    )),
+                  padding: EdgeInsets.only(right: 8),
+                  height: 50.0,
+                  width: 100,
+                  decoration: BoxDecoration(color: bgColor),
+                  child: Center(
+                    child: Text("montant",
+                        style: GoogleFonts.lato(
+                          color: Colors.white,
+                        )),
+                  ),
+                ),
                 suffixIcon: Container(
                   height: 50,
                   width: 100,
-                  color: Colors.grey[100],
-                  padding: EdgeInsets.all(10),
-                  child: StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) {
-                    return DropdownButton<String>(
-                      menuMaxHeight: 300,
-                      dropdownColor: Colors.white,
-                      value: devise,
-                      underline: SizedBox(),
-                      hint: Text(
-                        "Devise",
-                        style: GoogleFonts.mulish(
-                            color: Colors.grey[600],
-                            fontSize: 14.0,
-                            fontStyle: FontStyle.italic),
-                      ),
-                      isExpanded: false,
-                      items: ["FC", "USD"].map((e) {
-                        return DropdownMenuItem<String>(
-                            value: e,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text(
-                                  "$e",
-                                  style: GoogleFonts.mulish(
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ));
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          devise = value;
-                          appController.devise.value = value;
-                        });
-                      },
-                    );
-                  }),
+                  color: Colors.grey[200],
+                  padding:
+                      EdgeInsets.symmetric(vertical: 12.0, horizontal: 5.0),
+                  child: Text("Devise : $currency"),
                 ),
                 border: InputBorder.none,
                 counterText: '',

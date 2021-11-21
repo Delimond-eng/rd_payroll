@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:medpad/constants/style.dart';
 import 'package:medpad/pages/auth/authenticate_page_route.dart';
 import 'package:medpad/services/db_helper_service.dart';
 
@@ -25,11 +27,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Container(
-          height: 100.0,
-          width: 150.0,
-          padding: EdgeInsets.all(5.0),
+          height: 200.0,
+          width: 300.0,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
           decoration: BoxDecoration(
-            color: Colors.blue[900],
+            color: bgColor,
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(
@@ -40,7 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
           child: Center(
-            child: PageTitle(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PageTitle(
+                  fontSize: 35.0,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                SpinKitThreeBounce(color: Colors.white),
+              ],
+            ),
           ),
         ),
       ),
@@ -48,12 +62,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> loadDataEndGo() async {
-    await DBHelper.initDb();
-    await Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AuthenticationPageRoute(),
-      ),
-    );
+    new Timer(Duration(seconds: 5), () {
+      DBHelper.initDb();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AuthenticationPageRoute(),
+        ),
+      );
+    });
   }
 }
