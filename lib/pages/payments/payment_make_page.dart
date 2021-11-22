@@ -292,7 +292,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                                     ),
                                     FieldSet(
                                       title: "Montant",
-                                      value: "5000   FC",
+                                      value: "${agent.montant}  ${agent.devise}",
                                     ),
                                   ],
                                 ),
