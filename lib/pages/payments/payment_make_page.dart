@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/utilities.dart';
@@ -15,7 +15,6 @@ import 'package:medpad/models/agent_model.dart';
 import 'package:medpad/models/paiement_model.dart';
 import 'package:medpad/pages/agents/widgets/user_field_widget.dart';
 import 'package:medpad/services/db_helper_service.dart';
-import 'package:medpad/widgets/input_text_grey.dart';
 import 'package:medpad/widgets/user_session.dart';
 
 class PaymentFoundPage extends StatefulWidget {
@@ -152,8 +151,8 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                                             ),
                                             Flexible(
                                               child: FieldRead(
-                                                headingTitle: "Etat civil",
-                                                value: "${agent.etatCivil}",
+                                                headingTitle: "Téléphone",
+                                                value: "${agent.portable}",
                                               ),
                                             ),
                                           ],
@@ -169,6 +168,15 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                                         horizontal: 20.0),
                                     child: Row(
                                       children: [
+                                        Flexible(
+                                          child: FieldRead(
+                                            headingTitle: "Etat civil",
+                                            value: "${agent.etatCivil}",
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
+                                        ),
                                         Flexible(
                                           child: FieldRead(
                                             headingTitle: "Date de naissance",
@@ -268,36 +276,25 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CalendarField(
+                                    FieldSet(
                                       title: "Mois",
                                       value: "Janvier",
                                     ),
                                     SizedBox(
-                                      width: 20.0,
+                                      width: 10.0,
                                     ),
-                                    CalendarField(
+                                    FieldSet(
                                       title: "Année",
                                       value: "2021",
                                     ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    FieldSet(
+                                      title: "Montant",
+                                      value: "5000   FC",
+                                    ),
                                   ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Flexible(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin:
-                                      EdgeInsets.only(left: 20.0, right: 20.0),
-                                  child: InputText(
-                                    icon: Icons.money,
-                                    inputController: textAmount,
-                                    hintText: "Entrer montant",
-                                    keyType: TextInputType.number,
-                                    isWithSelectable: true,
-                                    currency: "FC",
-                                  ),
                                 ),
                               ),
                             ],
@@ -623,10 +620,10 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
   }
 }
 
-class CalendarField extends StatelessWidget {
+class FieldSet extends StatelessWidget {
   final String title;
   final String value;
-  const CalendarField({
+  const FieldSet({
     Key key,
     this.title,
     this.value,

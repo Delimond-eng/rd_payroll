@@ -9,8 +9,9 @@ class ApiManagerService {
   static Future createHospitalAccount(
       {nom, tel, province, ville, adresse, pwd, email}) async {
     final response = await Api.post(
-        Uri.parse("${ApiManagerService.baseURL}/hopitals/compte/register"),
-        body: jsonEncode(<String, dynamic>{
+      Uri.parse("$baseURL/hopitals/compte/register"),
+      body: jsonEncode(
+        <String, dynamic>{
           "nom": nom,
           "telephone": tel,
           "province": province,
@@ -18,9 +19,9 @@ class ApiManagerService {
           "adresse": adresse,
           "email": email,
           "pass": pwd
-        }));
-    print(response.body);
-
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       var status = jsonResponse["reponse"]["status"];
