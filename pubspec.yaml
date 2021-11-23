@@ -52,6 +52,7 @@ dependencies:
   bubble_tab_indicator: "^0.1.5"
   signature: ^4.1.1
   page_transition: any
+  flutter_easyloading: any
 
 dev_dependencies:
   flutter_test:

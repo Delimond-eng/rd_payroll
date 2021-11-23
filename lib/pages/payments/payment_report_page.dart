@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
-import 'package:medpad/models/paiement_model.dart';
 import 'package:medpad/widgets/user_session.dart';
 
 class PaymentReportPage extends StatefulWidget {
@@ -87,9 +85,9 @@ class _PaymentReportPageState extends State<PaymentReportPage> {
 
 class _DataSource extends DataTableSource {
   final BuildContext context;
-  List<PaymentReporting> _rows;
+  //List<PaymentReporting> _rows;
   _DataSource(this.context) {
-    _rows = apiController.paymentReportList;
+    //_rows = apiController.paymentReportList;
   }
 
   int _selectedCount = 0;
@@ -98,11 +96,11 @@ class _DataSource extends DataTableSource {
   DataRow getRow(int index) {
     assert(index >= 0);
 
-    if (index >= _rows.length) return null;
+    //if (index >= _rows.length) return null;
 
-    final _row = _rows[index];
+    //final _row = _rows[index];
 
-    return DataRow.byIndex(index: index, selected: false, cells: [
+    /*return DataRow.byIndex(index: index, selected: false, cells: [
       DataCell(Text(_row.nom)),
       DataCell(Text(_row.postnom)),
       DataCell(Text(_row.prenom)),
@@ -112,14 +110,14 @@ class _DataSource extends DataTableSource {
       DataCell(Text('${_row.montant}')),
       DataCell(Text('${_row.devise}')),
       DataCell(Text('${_row.datePaie}')),
-    ]);
+    ]);*/
   }
 
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _rows.length;
+  int get rowCount => 0;
 
   @override
   int get selectedRowCount => _selectedCount;

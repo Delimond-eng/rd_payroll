@@ -9,7 +9,8 @@ import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/data_storage.dart';
 import 'package:medpad/helpers/utilities.dart';
-import 'package:medpad/models/user_model.dart';
+import 'package:medpad/models/beneficiaires_model.dart';
+import 'package:medpad/models/sync_data_model.dart';
 import 'package:medpad/screens/agence_view_screen.dart';
 import 'package:medpad/services/db_helper_service.dart';
 import 'package:medpad/widgets/auth_input_text_widget.dart';
@@ -25,12 +26,6 @@ class AuthenticationPageRoute extends StatefulWidget {
 }
 
 class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
-  @override
-  void initState() {
-    super.initState();
-    DBHelper.registerUser();
-  }
-
   final textEmail = TextEditingController();
   final textPass = TextEditingController();
 
@@ -189,10 +184,22 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
                                         color: Colors.grey[100],
                                         onPressed: () async {
                                           //appController.showScan(context);
-                                          await DBHelper.getPaymentReporting()
+                                          await DBHelper.viewDatas(
+                                                  tableName: "beneficiaires")
                                               .then((value) {
-                                            print(value);
+                                            var json = jsonEncode(value);
+
+                                            Iterable i = jsonDecode(json);
+                                            List<Beneficiaire> list =
+                                                List<Beneficiaire>.from(i.map(
+                                                    (e) =>
+                                                        Beneficiaire.fromJson(
+                                                            e)));
+                                            print(list[260].netApayer);
                                           });
+                                          //Xloading.showLottieLoading(context);
+                                          //await ApiManagerService.inPutData();
+                                          //Xloading.dismiss();
                                         },
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -214,7 +221,7 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
                                               ),
                                             ),
                                             Text(
-                                              "SCANNER",
+                                              "SYNCHRO",
                                               style: GoogleFonts.mulish(
                                                 color: Colors.blue[700],
                                                 fontWeight: FontWeight.w600,
@@ -260,19 +267,18 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
           borderRadius: 20);
       return;
     }
-    User user = User(email: textEmail.text, password: textPass.text);
+    Agents user = Agents(email: textEmail.text, pass: textPass.text);
     try {
       Xloading.showLottieLoading(context);
       DBHelper.loginUser(user: user).then((value) {
         var json = jsonEncode(value);
         Iterable i = jsonDecode(json);
-        List<User> user =
-            List<User>.from(i.map((model) => User.fromMap(model)));
+        List<Agents> user =
+            List<Agents>.from(i.map((model) => Agents.fromJson(model)));
         if (user.isNotEmpty) {
-          storage.write("user_id", user[0].userId);
+          storage.write("agent_id", user[0].agentId);
           apiController.loadDatas();
           Future.delayed(Duration(seconds: 1), () {
-            storage.write("isLoggedIn", true);
             Xloading.dismiss();
             Navigator.pushAndRemoveUntil(
               context,
@@ -296,11 +302,5 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
     } catch (err) {
       print("failed");
     }
-  }
-
-  Future<void> viewUser() async {
-    DBHelper.viewUsers().then((value) {
-      print(value);
-    });
   }
 }

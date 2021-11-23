@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/pages/auth/authenticate_page_route.dart';
-import 'package:medpad/services/db_helper_service.dart';
 
 import 'package:medpad/widgets/page_title.dart';
 
@@ -14,8 +13,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  //bool isLoggedIn = storage.read("isLoggedIn");
-
   @override
   void initState() {
     super.initState();
@@ -62,8 +59,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> loadDataEndGo() async {
+    //DBHelper.initDb();
     new Timer(Duration(seconds: 5), () {
-      DBHelper.initDb();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

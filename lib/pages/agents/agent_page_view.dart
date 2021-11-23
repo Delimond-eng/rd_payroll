@@ -13,8 +13,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/utilities.dart';
-import 'package:medpad/models/agent_model.dart';
-import 'package:medpad/models/empreinte_model.dart';
+import 'package:medpad/models/sync_data_model.dart';
+
 import 'package:medpad/services/db_helper_service.dart';
 import 'package:signature/signature.dart';
 
@@ -22,6 +22,10 @@ import 'widgets/finger_control_widget.dart';
 import 'widgets/user_field_widget.dart';
 
 class AgentPageView extends StatefulWidget {
+  final Paiements data;
+  final String beneficiaireId;
+  const AgentPageView({Key key, this.data, this.beneficiaireId})
+      : super(key: key);
   @override
   _AgentPageViewState createState() => _AgentPageViewState();
 }
@@ -94,30 +98,17 @@ class _AgentPageViewState extends State<AgentPageView>
 
     try {
       Xloading.showLottieLoading(context);
-      Agent agent = Agent(
-        nom: "Tenday",
-        postnom: "Meza",
-        prenom: "Christian",
-        adresse: "012, bananier Kinshasa",
-        dateCreation: formatDate(DateTime.now()),
-        dateNaissance: "21/12/1992",
-        devise: "FC",
-        etatCivil: "Celibataire",
-        localite: "Kolwezi",
-        montant: "30000",
-        photo: photo,
-        signature: strSignature,
-        portable: "+243824532532",
-        numCompte: "556226",
-        sexe: "Masculin",
-      );
-      Empreinte empreinte = Empreinte(
+
+      Empreintes empreinte = Empreintes(
         empreinte1: strFinger1,
         empreinte2: strFinger2,
         empreinte3: strFinger3,
       );
-      await DBHelper.saveAgent(agent: agent, empreinte: empreinte)
-          .then((value) {
+      await DBHelper.enregistrerEmpreintes(
+        empreinte: empreinte,
+        paiement: widget.data,
+        id: widget.beneficiaireId,
+      ).then((value) {
         Xloading.dismiss();
         if (value != null) {
           apiController.loadDatas();
@@ -212,7 +203,7 @@ class _AgentPageViewState extends State<AgentPageView>
                                 SizedBox(
                                   width: 8.0,
                                 ),
-                                Text("Informations sur l'agent"),
+                                Text("Informations sur l'agent bénéficiaire"),
                               ],
                             ),
                           ],
@@ -277,7 +268,7 @@ class _AgentPageViewState extends State<AgentPageView>
                 Flexible(
                   child: FieldRead(
                     headingTitle: "Nom & Post Nom",
-                    value: "Tenday Meza",
+                    value: "${widget.data.nom}",
                   ),
                 ),
                 SizedBox(
@@ -285,8 +276,8 @@ class _AgentPageViewState extends State<AgentPageView>
                 ),
                 Flexible(
                   child: FieldRead(
-                    headingTitle: "Prénom",
-                    value: "Christian",
+                    headingTitle: "Matricule",
+                    value: "${widget.data.matricule}",
                   ),
                 ),
               ],
@@ -299,7 +290,7 @@ class _AgentPageViewState extends State<AgentPageView>
                 Flexible(
                   child: FieldRead(
                     headingTitle: "Sexe",
-                    value: "Masculin",
+                    value: "${widget.data.sexe}",
                   ),
                 ),
                 SizedBox(
@@ -308,7 +299,7 @@ class _AgentPageViewState extends State<AgentPageView>
                 Flexible(
                   child: FieldRead(
                     headingTitle: "Etat civil",
-                    value: "Celibataire",
+                    value: "${widget.data.etatCivil}",
                   ),
                 ),
               ],

@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/pages/agents/search_page.dart';
-import 'package:medpad/pages/pay_session_cancel_page.dart';
 import 'package:medpad/pages/payments/payment_page_scanning.dart';
+import 'package:medpad/services/api_manager_service.dart';
 import 'package:medpad/widgets/page_title.dart';
 import 'package:medpad/widgets/user_session.dart';
 import 'package:page_transition/page_transition.dart';
@@ -21,8 +21,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int get pAmount =>
-      apiController.user.value.montant - apiController.user.value.montantReste;
   @override
   Widget build(BuildContext context) {
     var _size = MediaQuery.of(context).size;
@@ -73,14 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                /*Navigator.push(
                   context,
                   PageTransition(
                     type: PageTransitionType.leftToRightWithFade,
                     child: PaySessionCancelPage(),
                   ),
-                );
+                );*/
+
+                var data = ApiManagerService.getDatas();
               },
               color: Colors.orange,
             ),
@@ -170,21 +170,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: "Montant alloué",
                           strIcon: "assets/svg/financial-growth.svg",
                           color: bgColor,
-                          value:
-                              "${apiController.user.value.montant.toDouble()} ${apiController.user.value.devise.toLowerCase()}",
+                          value: "000 CDF",
                         ),
                         DashCard(
                           title: "Montant restant",
                           strIcon: "assets/svg/financial-statement.svg",
-                          value:
-                              "${apiController.user.value.montantReste.toDouble()} ${apiController.user.value.devise.toLowerCase()} ",
+                          value: "25000 CDF",
                           color: bgColor,
                         ),
                         DashCard(
                           title: "Montant payé",
                           strIcon: "assets/svg/payroll-salary.svg",
-                          value:
-                              "${pAmount.toDouble()} ${apiController.user.value.devise.toLowerCase()} ",
+                          value: "0 CDF",
                           color: Colors.grey[800],
                         ),
                       ],

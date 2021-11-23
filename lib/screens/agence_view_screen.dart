@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/widgets/menu_card.dart';
 import 'package:medpad/widgets/page_title.dart';
@@ -18,6 +19,18 @@ class AgenceViewScreen extends StatefulWidget {
 }
 
 class _AgenceViewScreenState extends State<AgenceViewScreen> {
+  @override
+  void initState() {
+    super.initState();
+    refreshData();
+  }
+
+  void refreshData() {
+    if (apiSyncController.isSyncData.value == true) {
+      print("loading");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

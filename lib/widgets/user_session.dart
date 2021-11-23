@@ -60,7 +60,7 @@ class UserBox extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        apiController.user.value.nom.capitalizeFirst,
+                        apiController.agent.value.nom.capitalizeFirst,
                         style: GoogleFonts.lato(
                             color: Colors.white,
                             fontSize: 15.0,

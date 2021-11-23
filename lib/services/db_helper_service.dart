@@ -1,12 +1,7 @@
 import 'dart:async';
-import 'package:get/get.dart';
-import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/data_storage.dart';
-import 'package:medpad/models/agent_model.dart';
-import 'package:medpad/models/empreinte_model.dart';
-import 'package:medpad/models/paiement_model.dart';
-import 'package:medpad/models/user_model.dart';
-import 'package:medpad/services/cryptage_service.dart';
+import 'package:medpad/models/pay_model.dart';
+import 'package:medpad/models/sync_data_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -30,142 +25,245 @@ class DBHelper {
   }
 
   static _onCreate(Database db, int version) async {
-    print("init db");
     try {
       await db.transaction((txn) async {
         await txn.execute(
-            "CREATE TABLE agents(agent_id INTEGER PRIMARY KEY AUTOINCREMENT, num_compte TEXT, nom TEXT, postnom TEXT, prenom TEXT, portable TEXT, sexe TEXT, etat_civil TEXT, adresse TEXT, localite TEXT, date_naissance TEXT, montant TEXT, devise TEXT, photo TEXT, signature TEXT, empreinte_id INTEGER, statut TEXT, date_creation TEXT, id_utilisateur INTEGER)");
+            "CREATE TABLE agents(id INTEGER PRIMARY KEY AUTOINCREMENT, agent_id TEXT, nom TEXT, telephone TEXT, pass TEXT, email TEXT)");
         await txn.execute(
-            "CREATE TABLE empreinte(empreinte_id INTEGER PRIMARY KEY AUTOINCREMENT, empreinte_1 TEXT, empreinte_2 TEXT, empreinte_3 TEXT)");
+            "CREATE TABLE beneficiaires(id INTEGER PRIMARY KEY AUTOINCREMENT, beneficiaire_id TEXT, num_compte TEXT, nom TEXT, telephone TEXT,matricule TEXT, netapayer TEXT, devise TEXT, sexe TEXT, etat_civil TEXT, date_naissance TEXT, empreinte_id TEXT, photo TEXT, signature_capture TEXT, ayant_droit TEXT)");
         await txn.execute(
-            "CREATE TABLE paiements(paiement_id INTEGER PRIMARY KEY AUTOINCREMENT, agent_id INTEGER, montant INTEGER, devise TEXT, mois TEXT, annee TEXT, date_paie TEXT, id_utilisateur INTEGER, capture TEXT, statut TEXT)");
+            "CREATE TABLE activites(id INTEGER PRIMARY KEY AUTOINCREMENT, activite_id TEXT, montant_budget TEXT,devise TEXT, telephone_representant TEXT, site_id TEXT)");
         await txn.execute(
-            "CREATE TABLE reserve(reserve_id INTEGER PRIMARY KEY AUTOINCREMENT, montant INTEGER, devise TEXT, reste INTEGER, montantatt INTEGER, mois TEXT, annee TEXT, date_creation TEXT, statut TEXT)");
+            "CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT,site_id TEXT, site TEXT, province TEXT)");
         await txn.execute(
-            "CREATE TABLE utilisateurs(utilisateur_id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, email TEXT, pass TEXT, date_creation TEXT, montant INTEGER, devise TEXT, montant_reste INTEGER, id_reserve INTEGERT, statut TEXT)");
+            "CREATE TABLE empreintes(id INTEGER PRIMARY KEY AUTOINCREMENT, empreinte_id TEXT, empreinte_1 TEXT, empreinte_2 TEXT, empreinte_3 TEXT)");
+        await txn.execute(
+            "CREATE TABLE paiements(id INTEGER PRIMARY KEY AUTOINCREMENT, paiement_id TEXT, preuve_1 TEXT, preuve_2 TEXT, preuve_3 TEXT,preuve_4 TEXT, preuve_5 TEXT, preuve_6 TEXT)");
       });
     } catch (err) {
       print("error from transaction");
     }
   }
 
-  static Future registerUser() async {
+  static Future registerUser(Agents user) async {
     var dbClient = await db;
-    int userId;
-    User user = User(
-        email: "rtgroup@gmail.com",
-        montant: 300000,
-        devise: "FC",
-        dateCreation: formatDate(DateTime.now()),
-        nom: "RT GROUP",
-        montantReste: 300000,
-        statut: "actif",
-        password: "12345",
-        idReserve: 1);
-    await dbClient.transaction((txn) async {
-      List<Map> map = await txn.query("utilisateurs");
-      if (map.isEmpty) {
-        userId = await txn.insert("utilisateurs", user.toMap());
-      } else {
-        print("user exist!");
-      }
-    });
-    storage.write("user_id", userId);
-    print("user id: $userId");
+    var lastInsertId;
+
+    try {
+      await dbClient.transaction((txn) async {
+        var batch = txn.batch();
+        batch.rawQuery(
+          "INSERT INTO agents(agent_id, nom, telephone,pass, email) VALUES(?,?,?,?)",
+          [
+            user.agentId,
+            user.nom,
+            user.telephone,
+            user.pass,
+            user.email,
+          ],
+        );
+        await batch.commit(noResult: true);
+      });
+    } catch (e) {
+      print("error from agents insert void $e");
+    }
+
+    if (lastInsertId == null) {
+      print("null");
+    }
+    print("success $lastInsertId");
   }
 
-  static Future loginUser({User user}) async {
+  static Future enregistrerSites(Activites s) async {
     var dbClient = await db;
-    String pwd = GxdCryptor.encrypt(user.password);
-    String userEmail = user.email;
-    return await dbClient.query("utilisateurs",
-        where: "email=? AND pass=?", whereArgs: ['$userEmail', '$pwd']);
+    var lastInsertId;
+
+    try {
+      await dbClient.transaction((txn) async {
+        var batch = txn.batch();
+        batch.rawQuery(
+            "INSERT INTO sites(site_id, site, province) VALUES(?,?,?)", [
+          s.siteId,
+          s.site,
+          s.province,
+        ]);
+        await batch.commit(noResult: true);
+      });
+    } catch (e) {
+      print("error from site insert void $e");
+    }
+
+    if (lastInsertId == null) {
+      print("null");
+      return;
+    }
+    print("success $lastInsertId");
+  }
+
+  static Future enregistrerActivites(Activites s) async {
+    var dbClient = await db;
+    var lastInsertId;
+    try {
+      await dbClient.transaction((txn) async {
+        var batch = txn.batch();
+        batch.rawQuery(
+            "INSERT INTO activites(activite_id, montant_budget, devise, telephone_representant, site_id) VALUES(?,?,?,?,?)",
+            [
+              s.activiteId,
+              s.montantBudget,
+              'CDF',
+              s.telephoneRepresentant,
+              s.siteId
+            ]);
+        await batch.commit(noResult: true);
+      });
+    } catch (e) {
+      print("error from site insert void $e");
+    }
+    print("success $lastInsertId");
+  }
+
+  static Future viewDatas({String tableName}) async {
+    var dbClient = await db;
+    var map;
+
+    try {
+      await dbClient.transaction((txn) async {
+        map = await txn.query(tableName);
+      });
+    } catch (err) {
+      print("error from view beneficiaire void $err");
+    }
+    if (map == null) {
+      return null;
+    }
+    return map;
+  }
+
+  static Future loginUser({Agents user}) async {
+    var dbClient = await db;
+    String pwd = user.pass;
+    String userEmail = user.email.isEmpty ? user.email : user.telephone;
+
+    var map;
+    try {
+      map = await dbClient.query("agents",
+          where: "email=? OR telephone=? AND pass=?",
+          whereArgs: [userEmail, pwd]);
+    } catch (e) {
+      print("error from $e");
+    }
+    return map;
   }
 
   static Future viewUsers() async {
     var dbClient = await db;
-    int userId = storage.read('user_id');
+    int userId = storage.read('agent_id');
     return await dbClient
-        .query("utilisateurs", where: "utilisateur_id=?", whereArgs: [userId]);
+        .query("agents", where: "agent_id=?", whereArgs: [userId]);
   }
 
-  /*static Future savePictures({String photo, String signature}) async{
+  static Future enregistrerEmpreintes(
+      {Empreintes empreinte, Paiements paiement, String id}) async {
     var dbClient = await db;
-    Map<String, dynamic> map = new Map<String, dynamic>();
-    map['picture_photo'] = photo;
-    map['picture_signature'] = signature;
-    int pictureId = await dbClient.insert("pictures", map);
-    return pictureId;
-  }
+    int lastUpdateId;
 
-  static Future viewPictures() async{
-    var dbClient = await db;
-    return dbClient.query("pictures");
-  }*/
-
-  static Future saveAgent({Empreinte empreinte, Agent agent}) async {
-    var dbClient = await db;
-    var lastInsertId;
-    await dbClient.transaction((txn) async {
-      try {
-        int empreinte_id = await txn.insert("empreinte", empreinte.toMap());
-        if (empreinte_id != null) {
-          agent.empreinteId = empreinte_id;
-          int userId = storage.read("user_id");
-          agent.idUtilisateur = userId;
-          lastInsertId = await txn.insert("agents", agent.toMap());
+    try {
+      await dbClient.transaction((txn) async {
+        int empreinteId = await txn.insert("empreintes", empreinte.toJson());
+        if (empreinteId != null) {
+          lastUpdateId = await txn.rawUpdate(
+              "UPDATE beneficiaires SET empreinte_id = ?, photo = ?, signature_capture = ? WHERE beneficiaire_id=?",
+              ['$empreinteId', paiement.photo, paiement.signatureCapture, id]);
         }
-      } catch (err) {
-        print("statment err $err");
-      }
-    });
-    return lastInsertId;
-  }
+      });
+    } catch (err) {
+      print('error from updating data!');
+    }
 
-  static Future savePaiement({Payment payment}) async {
-    var dbClient = await db;
-    int lastInsertId;
-    await dbClient.transaction((txn) async {
-      try {
-        int userId = storage.read("user_id");
-        payment.userId = userId;
-        //stmt insert finger firstly
-        lastInsertId = await txn.insert("paiements", payment.toMap());
-        if (lastInsertId != null) {
-          List<Map> map = await txn.query("utilisateurs",
-              where: "utilisateur_id = ?", whereArgs: ['$userId']);
-          if (map.isNotEmpty) {
-            List<User> user = [];
-            user.add(User.fromMap(map[0]));
-            if (payment.montant <= user[0].montantReste) {
-              int updateAmount = (user[0].montantReste - payment.montant);
-              int update = await txn.rawUpdate(
-                  "UPDATE utilisateurs SET montant_reste=? WHERE utilisateur_id=?",
-                  ['$updateAmount', '$userId']);
-              print(update);
-            }
-          }
-        }
-      } catch (err) {
-        print("payment statment error $err");
-      }
-    });
-    if (lastInsertId != null) {
-      return lastInsertId;
-    } else {
+    if (lastUpdateId == null) {
       return null;
+    }
+    return lastUpdateId;
+  }
+
+  static Future checkDatas(
+      {String checkId, String where, String tableName}) async {
+    var dbClient = await db;
+    var map;
+    try {
+      await dbClient.transaction((txn) async {
+        map =
+            await txn.query(tableName, where: "$where=?", whereArgs: [checkId]);
+      });
+    } catch (e) {
+      print("error from check beneficiaire $e");
+    }
+    if (map.isEmpty) {
+      return "0";
+    } else {
+      return "1";
     }
   }
 
-  static Future foundAgent({int empreinteId}) async {
+  static Future enregistrerBeneficiaire({Paiements paiement}) async {
     var dbClient = await db;
-    return await dbClient
-        .query('agents', where: 'empreinte_id=?', whereArgs: ['$empreinteId']);
+    var lastInsertId;
+    try {
+      await dbClient.transaction((txn) async {
+        var batch = txn.batch();
+
+        batch.rawInsert(
+            "INSERT INTO beneficiaires(beneficiaire_id, num_compte, nom, netapayer,devise, telephone,matricule, sexe, etat_civil, date_naissance, empreinte_id, photo, signature_capture, ayant_droit) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            [
+              paiement.beneficiaireId,
+              paiement.numCompte,
+              paiement.nom,
+              paiement.netApayer,
+              paiement.devise,
+              paiement.telephone,
+              paiement.matricule,
+              paiement.sexe,
+              paiement.etatCivil,
+              paiement.dateNaissance,
+              paiement.empreinteId,
+              paiement.photo,
+              paiement.signatureCapture,
+              paiement.ayantDroit
+            ]);
+        await batch.commit(noResult: true);
+      });
+    } catch (e) {
+      print("error from register beneficiaire $e");
+    }
+
+    print("success $lastInsertId");
+  }
+
+  static Future effectuerPaiement({PayModel paie}) async {
+    var dbClient = await db;
+    var lastInsertedId;
+    try {
+      await dbClient.transaction((txn) async {
+        lastInsertedId = await txn.insert("paiements", paie.toJson());
+      });
+    } catch (err) {
+      print("error from payment statment $err");
+    }
+
+    if (lastInsertedId == null) return null;
+    return lastInsertedId;
+  }
+
+  static Future scannerBeneficiaire({String empreinteId}) async {
+    var dbClient = await db;
+    return await dbClient.query('beneficiaires',
+        where: 'empreinte_id=?', whereArgs: ['$empreinteId']);
   }
 
   static Future getAllFingers() async {
     var dbClient = await db;
-    return await dbClient.query('empreinte');
+    return await dbClient.query('empreintes');
   }
 
   static Future getPaymentReporting() async {
@@ -176,10 +274,9 @@ class DBHelper {
     return list;
   }
 
-  static Future getClients() async {
+  static Future getBeneficiaires() async {
     var dbClient = await db;
-    var list = await dbClient.query("agents", orderBy: "agent_id DESC");
-    print(list);
+    var list = await dbClient.query("beneficiaires", orderBy: "id DESC");
     return list;
   }
 

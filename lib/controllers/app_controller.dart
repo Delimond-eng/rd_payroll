@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
-import 'package:medpad/helpers/utilities.dart';
 import 'package:medpad/services/db_helper_service.dart';
 import 'package:medpad/services/native_service.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -158,8 +157,7 @@ class AppController extends GetxController {
                                             btnController.value.stop();
                                             await apiController
                                                 .findClientByFingerId(
-                                                    fingerId:
-                                                        int.parse(fingerId))
+                                                    fingerId: fingerId)
                                                 .then((value) {
                                               if (value == "success") {
                                                 Get.back();
