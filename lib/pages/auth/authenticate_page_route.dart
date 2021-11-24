@@ -36,10 +36,6 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
       appBar: AppBar(
         backgroundColor: bgColor,
         elevation: 0,
-        title: PageTitle(
-          fontSize: 20.0,
-        ),
-        centerTitle: true,
       ),
       body: Container(
           height: _size.height,
@@ -148,91 +144,23 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
                               height: 80.0,
                               width: MediaQuery.of(context).size.width,
                               child: Card(
-                                color: bgColor,
+                                color: Colors.white,
                                 elevation: 5,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0)),
-                                shadowColor: Colors.black87,
+                                shadowColor: Colors.black.withOpacity(.4),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(15.0),
                                       child: Center(
-                                        child: Text(
-                                          "AUTHENTIFICATION",
-                                          style: GoogleFonts.mulish(
-                                              color: Colors.white,
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w800,
-                                              letterSpacing: 1.50),
+                                        child: PageTitle(
+                                          fontSize: 30.0,
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      height: 80.0,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
-                                      ),
-                                      width: 200,
-                                      child: FlatButton(
-                                        splashColor: Colors.grey[50],
-                                        height: 80.0,
-                                        color: Colors.grey[100],
-                                        onPressed: () async {
-                                          //appController.showScan(context);
-                                          await DBHelper.viewDatas(
-                                                  tableName: "beneficiaires")
-                                              .then((value) {
-                                            var json = jsonEncode(value);
-
-                                            Iterable i = jsonDecode(json);
-                                            List<Beneficiaire> list =
-                                                List<Beneficiaire>.from(i.map(
-                                                    (e) =>
-                                                        Beneficiaire.fromJson(
-                                                            e)));
-                                            print(list[260].netApayer);
-                                          });
-                                          //Xloading.showLottieLoading(context);
-                                          //await ApiManagerService.inPutData();
-                                          //Xloading.dismiss();
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(8.0),
-                                              alignment: Alignment.center,
-                                              child: Lottie.asset(
-                                                "assets/lotties/4771-finger-print.json",
-                                                width: 50.0,
-                                                height: 50.0,
-                                                reverse: true,
-                                                fit: BoxFit.cover,
-                                                animate: true,
-                                              ),
-                                            ),
-                                            Text(
-                                              "SYNCHRO",
-                                              style: GoogleFonts.mulish(
-                                                color: Colors.blue[700],
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 1.0,
-                                                fontSize: 16.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
                                   ],
                                 ),
                               ),
@@ -255,21 +183,27 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.redAccent[100],
           backgroundColor: bgColor,
-          maxWidth: MediaQuery.of(context).size.width / 2.10,
-          borderRadius: 20);
+          maxWidth: MediaQuery.of(context).size.width / 1.50,
+          borderRadius: 0);
       return;
     } else if (textPass.text.isEmpty) {
       Get.snackbar("Avertissement", "votre mot de passe est réquis!",
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.redAccent[100],
           backgroundColor: bgColor,
-          maxWidth: MediaQuery.of(context).size.width / 2.10,
-          borderRadius: 20);
+          maxWidth: MediaQuery.of(context).size.width / 1.50,
+          borderRadius: 0);
       return;
     }
-    Agents user = Agents(email: textEmail.text, pass: textPass.text);
+    Agents user = Agents(
+        email: textEmail.text, telephone: textEmail.text, pass: textPass.text);
     try {
       Xloading.showLottieLoading(context);
+
+      DBHelper.viewDatas(tableName: "agents").then((res) {
+        print(res);
+      });
+
       DBHelper.loginUser(user: user).then((value) {
         var json = jsonEncode(value);
         Iterable i = jsonDecode(json);
@@ -277,7 +211,7 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
             List<Agents>.from(i.map((model) => Agents.fromJson(model)));
         if (user.isNotEmpty) {
           storage.write("agent_id", user[0].agentId);
-          apiController.loadDatas();
+          apiController.agent.value = user[0];
           Future.delayed(Duration(seconds: 1), () {
             Xloading.dismiss();
             Navigator.pushAndRemoveUntil(
@@ -300,6 +234,7 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
         }
       });
     } catch (err) {
+      Xloading.dismiss();
       print("failed");
     }
   }

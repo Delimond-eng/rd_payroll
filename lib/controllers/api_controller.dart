@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:medpad/helpers/data_storage.dart';
 import 'package:medpad/models/beneficiaires_model.dart';
 import 'package:medpad/models/sync_data_model.dart';
 import 'package:medpad/services/db_helper_service.dart';
@@ -28,7 +29,15 @@ class ApiController extends GetxController {
   }
 
   Future<void> getListClient() async {
-    try {} catch (err) {
+    try {
+      await DBHelper.viewDatas(tableName: "beneficiaires").then((value) {
+        var json = jsonEncode(value);
+        Iterable i = jsonDecode(json);
+        List<Beneficiaire> list =
+            List<Beneficiaire>.from(i.map((e) => Beneficiaire.fromJson(e)));
+        print(list.length);
+      });
+    } catch (err) {
       print("error from getListClient $err");
     }
   }
@@ -47,7 +56,7 @@ class ApiController extends GetxController {
     }
   }
 
-  Future<void> getPaymentReport() async {
+  Future<void> getPaymentInfo() async {
     try {} catch (err) {
       print("error from getListReport $err");
     }
@@ -65,10 +74,5 @@ class ApiController extends GetxController {
     }
   }
 
-  Future<void> loadDatas() async {
-    getPaymentReport();
-    loadUser();
-    getListClient();
-    getListFingers();
-  }
+  Future<void> loadDatas() async {}
 }

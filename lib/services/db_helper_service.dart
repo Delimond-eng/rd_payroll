@@ -53,7 +53,7 @@ class DBHelper {
       await dbClient.transaction((txn) async {
         var batch = txn.batch();
         batch.rawQuery(
-          "INSERT INTO agents(agent_id, nom, telephone,pass, email) VALUES(?,?,?,?)",
+          "INSERT INTO agents(agent_id, nom, telephone,pass, email) VALUES(?,?,?,?,?)",
           [
             user.agentId,
             user.nom,
@@ -142,14 +142,12 @@ class DBHelper {
 
   static Future loginUser({Agents user}) async {
     var dbClient = await db;
-    String pwd = user.pass;
-    String userEmail = user.email.isEmpty ? user.email : user.telephone;
 
     var map;
     try {
       map = await dbClient.query("agents",
-          where: "email=? OR telephone=? AND pass=?",
-          whereArgs: [userEmail, pwd]);
+          where: "telephone=? AND pass=?",
+          whereArgs: [user.telephone, user.pass]);
     } catch (e) {
       print("error from $e");
     }
@@ -203,6 +201,24 @@ class DBHelper {
       return "0";
     } else {
       return "1";
+    }
+  }
+
+  static Future find({String checkId, String where, String tableName}) async {
+    var dbClient = await db;
+    var map;
+    try {
+      await dbClient.transaction((txn) async {
+        map =
+            await txn.query(tableName, where: "$where=?", whereArgs: [checkId]);
+      });
+    } catch (e) {
+      print("error from check beneficiaire $e");
+    }
+    if (map.isEmpty) {
+      return map;
+    } else {
+      return null;
     }
   }
 
