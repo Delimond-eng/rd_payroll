@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
+import 'package:medpad/helpers/utilities.dart';
+import 'package:medpad/pages/agents/search_page.dart';
 
 import 'package:medpad/pages/payments/payment_make_page.dart';
 import 'package:medpad/widgets/user_session.dart';
@@ -57,18 +59,7 @@ class _PaymentPageViewState extends State<PaymentPageView> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20.0),
                               onTap: () async {
-                                await apiController.findClientByFingerId(
-                                    fingerId: "1");
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: PaymentFoundPage(),
-                                    fullscreenDialog: true,
-                                    type:
-                                        PageTransitionType.leftToRightWithFade,
-                                  ),
-                                );
-                                /*appController.showScan(
+                                appController.showScan(
                                   context,
                                   onSuccess: () {
                                     Navigator.push(
@@ -101,7 +92,7 @@ class _PaymentPageViewState extends State<PaymentPageView> {
                                           );
                                         });
                                   },
-                                );*/
+                                );
                               },
                               child: Container(
                                 child: Center(

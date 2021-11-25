@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:page_transition/page_transition.dart';
+
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
-import 'package:medpad/pages/agents/search_page.dart';
+import 'package:medpad/pages/pay_session_cancel_page.dart';
 import 'package:medpad/pages/payments/payment_page_scanning.dart';
-import 'package:medpad/services/api_manager_service.dart';
 import 'package:medpad/widgets/page_title.dart';
 import 'package:medpad/widgets/user_session.dart';
-import 'package:page_transition/page_transition.dart';
 
 import 'widgets/dash_card.dart';
 
@@ -21,6 +22,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  double get total =>
+      double.parse(apiController.activite.value.montantBudget) -
+      apiController.montantGlobalPayer.value;
   @override
   Widget build(BuildContext context) {
     var _size = MediaQuery.of(context).size;
@@ -51,42 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        actions: [
-          Container(
-            padding: EdgeInsets.all(8),
-            // ignore: deprecated_member_use
-            child: RaisedButton.icon(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              icon: Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.white,
-                size: 15,
-              ),
-              label: Text(
-                "Cloturer la session de paiement",
-                style: GoogleFonts.lato(
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () async {
-                /*Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.leftToRightWithFade,
-                    child: PaySessionCancelPage(),
-                  ),
-                );*/
-
-                var data = ApiManagerService.getDatas();
-              },
-              color: Colors.orange,
-            ),
-          ),
-          UserBox()
-        ],
+        actions: [UserBox()],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -123,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icons.payments,
                           title: "Paiement agent",
                           onPressed: () {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               PageTransition(
                                 type: PageTransitionType.leftToRightWithFade,
@@ -138,14 +107,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Flexible(
                         child: HomeNavCard(
-                          icon: Icons.show_chart,
-                          title: "Paiement reporting",
+                          icon: Icons.warning_rounded,
+                          color: Colors.orange[700],
+                          title: "Cloturer la session de paiement",
                           onPressed: () async {
                             Navigator.push(
                               context,
                               PageTransition(
+                                child: PaySessionCancelPage(),
                                 type: PageTransitionType.bottomToTop,
-                                child: SearchPage(),
                               ),
                             );
                           },
@@ -170,18 +140,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: "Montant alloué",
                           strIcon: "assets/svg/financial-growth.svg",
                           color: bgColor,
-                          value: "000 CDF",
+                          value:
+                              "${double.parse(apiController.activite.value.montantBudget)} ${apiController.activite.value.devise}",
                         ),
                         DashCard(
                           title: "Montant restant",
                           strIcon: "assets/svg/financial-statement.svg",
-                          value: "25000 CDF",
+                          value:
+                              "${apiController.montantGlobalPayer} ${apiController.activite.value.devise}",
                           color: bgColor,
                         ),
                         DashCard(
                           title: "Montant payé",
                           strIcon: "assets/svg/payroll-salary.svg",
-                          value: "0 CDF",
+                          value:
+                              "$total ${apiController.activite.value.devise}",
                           color: Colors.grey[800],
                         ),
                       ],
@@ -201,10 +174,12 @@ class HomeNavCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Function onPressed;
+  final Color color;
   const HomeNavCard({
     this.title,
     this.icon,
     this.onPressed,
+    this.color,
   });
 
   @override
@@ -212,7 +187,7 @@ class HomeNavCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.zero,
-        color: Colors.white,
+        color: color == null ? Colors.white : color,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(.3),
@@ -235,16 +210,17 @@ class HomeNavCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(icon, color: bgColor, size: 30),
+                  Icon(icon,
+                      color: color == null ? bgColor : Colors.white, size: 30),
                   SizedBox(
                     width: 20.0,
                   ),
                   Text(
                     title,
                     style: GoogleFonts.mulish(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18.0,
-                    ),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0,
+                        color: color == null ? null : Colors.white),
                   )
                 ],
               ),

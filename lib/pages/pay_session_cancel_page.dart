@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medpad/constants/style.dart';
+import 'package:medpad/helpers/data_storage.dart';
+import 'package:medpad/helpers/utilities.dart';
+import 'package:medpad/screens/agence_view_screen.dart';
 import 'package:medpad/widgets/user_session.dart';
+import 'package:page_transition/page_transition.dart';
 
 class PaySessionCancelPage extends StatefulWidget {
   PaySessionCancelPage({Key key}) : super(key: key);
@@ -180,7 +184,25 @@ class _PaySessionCancelPageState extends State<PaySessionCancelPage> {
                         ),
                         label: Text("Cloturer la session de paiement",
                             style: GoogleFonts.lato(color: Colors.white)),
-                        onPressed: () {},
+                        onPressed: () {
+                          XDialog.show(
+                            context: context,
+                            content:
+                                "Etes-vous sûr de vouloir cloturer cette session de paiement ?",
+                            icon: Icons.warning_rounded,
+                            title: "Cloture de la session de paiement!",
+                            onValidate: () {
+                              storage.remove("activite_id");
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                PageTransition(
+                                    child: AgenceViewScreen(),
+                                    type: PageTransitionType.bottomToTop),
+                                (route) => false,
+                              );
+                            },
+                          );
+                        },
                       ),
                     )
                   ],

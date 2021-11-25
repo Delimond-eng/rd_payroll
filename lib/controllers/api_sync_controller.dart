@@ -4,6 +4,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:medpad/constants/controllers.dart';
 
 import 'package:medpad/models/sync_data_model.dart';
 import 'package:medpad/services/api_manager_service.dart';
@@ -38,6 +39,7 @@ class ApiSyncController extends GetxController {
         EasyLoading.dismiss();
       }
     });
+    await apiController.loadDatas();
   }
 
   Future<void> loadDataFromServer() async {
@@ -54,6 +56,10 @@ class ApiSyncController extends GetxController {
         await DBHelper.registerUser(e);
       }
     });
+    if (d.data.activites.isEmpty) {
+      EasyLoading.dismiss();
+      return;
+    }
 
     d.data.activites.forEach((e) async {
       var checkMapActivity = await DBHelper.checkDatas(

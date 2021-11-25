@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AgenceCard extends StatelessWidget {
   final String icon;
   final String title;
+  final String province;
   final Color color;
   final Color subColor;
   final Function onPressed;
@@ -15,6 +16,7 @@ class AgenceCard extends StatelessWidget {
     this.color,
     this.subColor,
     this.onPressed,
+    this.province,
   }) : super(key: key);
 
   @override
@@ -62,12 +64,24 @@ class AgenceCard extends StatelessWidget {
                         height: 10.0,
                       ),
                       Text(
-                        title,
+                        "Site de ${title}",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.lato(
                           fontSize: 20.0,
                           fontWeight: FontWeight.w500,
                           color: subColor,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Text(
+                        "Province de $province",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.lato(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.amber,
                         ),
                       ),
                     ],

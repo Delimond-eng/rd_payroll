@@ -149,11 +149,12 @@ class AppController extends GetxController {
                                         await DBHelper.getAllFingers()
                                             .then((value) async {
                                           var json = jsonEncode(value);
+
                                           fingerId = await NativeService
                                               .platform
                                               .invokeMethod(
                                                   "match_fingers", json);
-                                          if (fingerId != "0") {
+                                          if (fingerId.isNotEmpty) {
                                             btnController.value.stop();
                                             await apiController
                                                 .findClientByFingerId(

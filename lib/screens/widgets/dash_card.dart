@@ -82,7 +82,7 @@ class DashCard extends StatelessWidget {
                 style: GoogleFonts.mulish(
                     fontWeight: FontWeight.w900,
                     color: Colors.cyan[50],
-                    fontSize: 25.0),
+                    fontSize: 20.0),
               ),
             )
           ],

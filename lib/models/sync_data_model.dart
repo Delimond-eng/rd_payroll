@@ -104,6 +104,7 @@ class Activites {
   String activiteId;
   String siteId;
   String montantBudget;
+  String devise;
   String nomRepresentant;
   String telephoneRepresentant;
   String site;
@@ -126,6 +127,7 @@ class Activites {
     activiteId = json['activite_id'];
     siteId = json['site_id'];
     montantBudget = json['montant_budget'];
+    devise = json['devise'];
     nomRepresentant = json['nom_representant'];
     telephoneRepresentant = json['telephone_representant'];
     site = json['site'];
@@ -144,6 +146,7 @@ class Activites {
     data['site_id'] = this.siteId;
     data['montant_budget'] = this.montantBudget;
     data['nom_representant'] = this.nomRepresentant;
+    data['devise'] = this.devise;
     data['telephone_representant'] = this.telephoneRepresentant;
     data['site'] = this.site;
     data['province'] = this.province;
@@ -202,6 +205,7 @@ class Paiements {
     devise = json['devise'];
     beneficiaireId = json['beneficiaire_id'];
     numCompte = json['num_compte'];
+    matricule = json['matricule'];
     nom = json['nom'];
     telephone = json['telephone'];
     sexe = json['sexe'];
@@ -227,6 +231,7 @@ class Paiements {
     data['devise'] = this.devise;
     data['beneficiaire_id'] = this.beneficiaireId;
     data['num_compte'] = this.numCompte;
+    data['matricule'] = this.matricule;
     data['nom'] = this.nom;
     data['telephone'] = this.telephone;
     data['sexe'] = this.sexe;

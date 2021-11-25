@@ -11,7 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/utilities.dart';
-import 'package:medpad/models/beneficiaires_model.dart';
 import 'package:medpad/models/pay_model.dart';
 import 'package:medpad/pages/agents/widgets/user_field_widget.dart';
 import 'package:medpad/services/db_helper_service.dart';
@@ -510,7 +509,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
 
     try {
       PayModel paiement = PayModel(
-        paiementId: apiController.paieInfo.value.paiementId,
+        paiementId: apiController.benefiaire.value.paiementId,
         preuve1: preuve1,
         preuve2: preuve2,
         preuve3: preuve3,
@@ -519,7 +518,15 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
         preuve6: "",
       );
       appController.showScan(context, onSuccess: () async {
-        await DBHelper.effectuerPaiement(paie: paiement);
+        await DBHelper.effectuerPaiement(paie: paiement).then((result) {
+          if (result != null) {
+            XDialog.showSuccessAnimation(context);
+            apiController.loadDatas();
+            Future.delayed(Duration(seconds: 3), () {
+              Get.back();
+            });
+          }
+        });
       }, onFailed: () {
         XDialog.showConfirmation(
             context: context,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:medpad/helpers/data_storage.dart';
+import 'package:medpad/models/beneficiaires_model.dart';
 import 'package:medpad/models/pay_model.dart';
 import 'package:medpad/models/sync_data_model.dart';
 import 'package:path/path.dart';
@@ -30,9 +31,9 @@ class DBHelper {
         await txn.execute(
             "CREATE TABLE agents(id INTEGER PRIMARY KEY AUTOINCREMENT, agent_id TEXT, nom TEXT, telephone TEXT, pass TEXT, email TEXT)");
         await txn.execute(
-            "CREATE TABLE beneficiaires(id INTEGER PRIMARY KEY AUTOINCREMENT, beneficiaire_id TEXT, num_compte TEXT, nom TEXT, telephone TEXT,matricule TEXT, netapayer TEXT, devise TEXT, sexe TEXT, etat_civil TEXT, date_naissance TEXT, empreinte_id TEXT, photo TEXT, signature_capture TEXT, ayant_droit TEXT)");
+            "CREATE TABLE beneficiaires(id INTEGER PRIMARY KEY AUTOINCREMENT, beneficiaire_id TEXT, num_compte TEXT, nom TEXT, telephone TEXT,matricule TEXT, netapayer TEXT, devise TEXT, sexe TEXT, etat_civil TEXT, date_naissance TEXT, empreinte_id TEXT, photo TEXT, signature_capture TEXT, ayant_droit TEXT, paiement_id TEXT)");
         await txn.execute(
-            "CREATE TABLE activites(id INTEGER PRIMARY KEY AUTOINCREMENT, activite_id TEXT, montant_budget TEXT,devise TEXT, telephone_representant TEXT, site_id TEXT)");
+            "CREATE TABLE activites(id INTEGER PRIMARY KEY AUTOINCREMENT, activite_id TEXT, montant_budget TEXT,devise TEXT, nom_representant TEXT,telephone_representant TEXT, site_id TEXT)");
         await txn.execute(
             "CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT,site_id TEXT, site TEXT, province TEXT)");
         await txn.execute(
@@ -43,6 +44,19 @@ class DBHelper {
     } catch (err) {
       print("error from transaction");
     }
+  }
+
+  static Future getPaieReport() async {
+    var dbClient = await db;
+    var map;
+    await dbClient.transaction((txn) async {
+      map = await txn.rawQuery(
+          "SELECT netapayer FROM beneficiaires INNER JOIN paiements ON beneficiaires.paiement_id = paiements.paiement_id ORDER BY beneficiaires.id DESC");
+    });
+    if (map.isEmpty) {
+      return null;
+    }
+    return map;
   }
 
   static Future registerUser(Agents user) async {
@@ -107,12 +121,13 @@ class DBHelper {
       await dbClient.transaction((txn) async {
         var batch = txn.batch();
         batch.rawQuery(
-            "INSERT INTO activites(activite_id, montant_budget, devise, telephone_representant, site_id) VALUES(?,?,?,?,?)",
+            "INSERT INTO activites(activite_id, montant_budget, devise, telephone_representant,nom_representant, site_id) VALUES(?,?,?,?,?,?)",
             [
               s.activiteId,
               s.montantBudget,
-              'CDF',
+              s.devise,
               s.telephoneRepresentant,
+              s.nomRepresentant,
               s.siteId
             ]);
         await batch.commit(noResult: true);
@@ -162,7 +177,7 @@ class DBHelper {
   }
 
   static Future enregistrerEmpreintes(
-      {Empreintes empreinte, Paiements paiement, String id}) async {
+      {Empreintes empreinte, Beneficiaire beneficiaire, String id}) async {
     var dbClient = await db;
     int lastUpdateId;
 
@@ -172,7 +187,7 @@ class DBHelper {
         if (empreinteId != null) {
           lastUpdateId = await txn.rawUpdate(
               "UPDATE beneficiaires SET empreinte_id = ?, photo = ?, signature_capture = ? WHERE beneficiaire_id=?",
-              ['$empreinteId', paiement.photo, paiement.signatureCapture, id]);
+              ['$empreinteId', beneficiaire.photo, beneficiaire.signature, id]);
         }
       });
     } catch (err) {
@@ -215,10 +230,10 @@ class DBHelper {
     } catch (e) {
       print("error from check beneficiaire $e");
     }
-    if (map.isEmpty) {
+    if (map.isNotEmpty) {
       return map;
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -230,7 +245,7 @@ class DBHelper {
         var batch = txn.batch();
 
         batch.rawInsert(
-            "INSERT INTO beneficiaires(beneficiaire_id, num_compte, nom, netapayer,devise, telephone,matricule, sexe, etat_civil, date_naissance, empreinte_id, photo, signature_capture, ayant_droit) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO beneficiaires(beneficiaire_id, num_compte, nom, netapayer,devise, telephone,matricule, sexe, etat_civil, date_naissance, empreinte_id, photo, signature_capture, ayant_droit, paiement_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
               paiement.beneficiaireId,
               paiement.numCompte,
@@ -245,7 +260,8 @@ class DBHelper {
               paiement.empreinteId,
               paiement.photo,
               paiement.signatureCapture,
-              paiement.ayantDroit
+              paiement.ayantDroit,
+              paiement.paiementId
             ]);
         await batch.commit(noResult: true);
       });
@@ -279,7 +295,9 @@ class DBHelper {
 
   static Future getAllFingers() async {
     var dbClient = await db;
-    return await dbClient.query('empreintes');
+    var map = await dbClient.query('empreintes');
+    if (map.isEmpty) return null;
+    return map;
   }
 
   static Future getPaymentReporting() async {

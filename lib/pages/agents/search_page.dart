@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
+import 'package:medpad/models/beneficiaires_model.dart';
 import 'package:medpad/pages/agents/agent_page_view.dart';
+import 'package:medpad/pages/payments/payment_make_page.dart';
+import 'package:medpad/services/db_helper_service.dart';
+import 'package:page_transition/page_transition.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key}) : super(key: key);
@@ -46,14 +53,43 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   SearchInput(
                     controller: controller,
-                    onSearched: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AgentPageView(),
-                          fullscreenDialog: true,
-                        ),
-                      );
+                    onSearched: () async {
+                      await DBHelper.viewDatas(tableName: "beneficiaires")
+                          .then((result) {
+                        var json = jsonEncode(result);
+                        Iterable i = jsonDecode(json);
+                        List<Beneficiaire> beneficiaires =
+                            List<Beneficiaire>.from(
+                                i.map((model) => Beneficiaire.fromJson(model)));
+
+                        beneficiaires.forEach((e) {
+                          if (e.nom
+                                  .toUpperCase()
+                                  .contains(controller.text.toLowerCase()) ||
+                              e.matricule == controller.text) {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: AgentPageView(
+                                  data: e,
+                                ),
+                                type: PageTransitionType.rightToLeftWithFade,
+                                fullscreenDialog: true,
+                              ),
+                            );
+                          } else if (e.ayantDroit.contains(controller.text)) {
+                            apiController.benefiaire.value = e;
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: PaymentFoundPage(),
+                                type: PageTransitionType.leftToRightWithFade,
+                                fullscreenDialog: true,
+                              ),
+                            );
+                          }
+                        });
+                      });
                     },
                   ),
                 ],

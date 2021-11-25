@@ -12,6 +12,7 @@ import 'package:medpad/helpers/utilities.dart';
 import 'package:medpad/models/beneficiaires_model.dart';
 import 'package:medpad/models/sync_data_model.dart';
 import 'package:medpad/screens/agence_view_screen.dart';
+import 'package:medpad/screens/home_screen.dart';
 import 'package:medpad/services/db_helper_service.dart';
 import 'package:medpad/widgets/auth_input_text_widget.dart';
 import 'package:medpad/widgets/page_title.dart';
@@ -178,6 +179,7 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
   }
 
   Future<void> login() async {
+    String activiteId = storage.read("activite_id") ?? "";
     if (textEmail.text.isEmpty) {
       Get.snackbar("Avertissement !", "votre adresse email est réquise !",
           snackPosition: SnackPosition.BOTTOM,
@@ -212,23 +214,33 @@ class _AuthenticationPageRouteState extends State<AuthenticationPageRoute> {
         if (user.isNotEmpty) {
           storage.write("agent_id", user[0].agentId);
           apiController.agent.value = user[0];
+          apiController.loadDatas();
           Future.delayed(Duration(seconds: 1), () {
             Xloading.dismiss();
-            Navigator.pushAndRemoveUntil(
-              context,
-              PageTransition(
-                  child: AgenceViewScreen(),
-                  type: PageTransitionType.bottomToTop),
-              (route) => false,
-            );
+            if (activiteId.isEmpty) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    child: AgenceViewScreen(),
+                    type: PageTransitionType.bottomToTop),
+                (route) => false,
+              );
+            } else {
+              apiController.getActivity(activiteId);
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    child: HomeScreen(), type: PageTransitionType.bottomToTop),
+                (route) => false,
+              );
+            }
           });
         } else {
           Xloading.dismiss();
           XDialog.showErrorMessage(
             context,
             title: "Identifiants incorrects",
-            message:
-                "Utilisateur inconnu !\nVeuillez essayer de vous identifier avec vos empreintes !",
+            message: "vos identifiants de la connexion sont erronés !",
           );
           return;
         }

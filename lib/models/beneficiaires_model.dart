@@ -14,6 +14,7 @@ class Beneficiaire {
   String ayantDroit;
   String netApayer;
   String devise;
+  String paiementId;
   Beneficiaire(
       {this.id,
       this.beneficiaireId,
@@ -29,7 +30,8 @@ class Beneficiaire {
       this.signature,
       this.ayantDroit,
       this.netApayer,
-      this.devise});
+      this.devise,
+      this.paiementId});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -47,6 +49,7 @@ class Beneficiaire {
     data['signature'] = signature;
     data['ayant_droit'] = ayantDroit;
     data['devise'] = devise;
+    data['paiement_id'] = paiementId;
     return data;
   }
 
@@ -65,5 +68,6 @@ class Beneficiaire {
     photo = data['photo'];
     signature = data['signature_capture'];
     ayantDroit = data['ayant_droit'];
+    paiementId = data['paiement_id'];
   }
 }

@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/utilities.dart';
+import 'package:medpad/models/beneficiaires_model.dart';
 import 'package:medpad/models/sync_data_model.dart';
 
 import 'package:medpad/services/db_helper_service.dart';
@@ -22,10 +23,8 @@ import 'widgets/finger_control_widget.dart';
 import 'widgets/user_field_widget.dart';
 
 class AgentPageView extends StatefulWidget {
-  final Paiements data;
-  final String beneficiaireId;
-  const AgentPageView({Key key, this.data, this.beneficiaireId})
-      : super(key: key);
+  final Beneficiaire data;
+  const AgentPageView({Key key, this.data}) : super(key: key);
   @override
   _AgentPageViewState createState() => _AgentPageViewState();
 }
@@ -100,18 +99,18 @@ class _AgentPageViewState extends State<AgentPageView>
       Xloading.showLottieLoading(context);
 
       Empreintes empreinte = Empreintes(
+        empreinteId: widget.data.empreinteId,
         empreinte1: strFinger1,
         empreinte2: strFinger2,
         empreinte3: strFinger3,
       );
       await DBHelper.enregistrerEmpreintes(
         empreinte: empreinte,
-        paiement: widget.data,
-        id: widget.beneficiaireId,
+        beneficiaire: widget.data,
+        id: widget.data.beneficiaireId,
       ).then((value) {
         Xloading.dismiss();
         if (value != null) {
-          apiController.loadDatas();
           clearInput();
           XDialog.showSuccessAnimation(context);
         }

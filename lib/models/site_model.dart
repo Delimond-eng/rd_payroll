@@ -23,7 +23,7 @@ class Sites {
   Sites.fromJson(Map<String, dynamic> json) {
     id = json["id"];
     siteId = json["site_id"];
-    siteNom = json['site_nom'];
+    siteNom = json['site'];
     province = json['province'];
   }
 }
