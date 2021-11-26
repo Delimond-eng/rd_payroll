@@ -37,7 +37,7 @@ class DBHelper {
         await txn.execute(
             "CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT,site_id TEXT, site TEXT, province TEXT)");
         await txn.execute(
-            "CREATE TABLE empreintes(id INTEGER PRIMARY KEY AUTOINCREMENT, empreinte_id TEXT, empreinte_1 TEXT, empreinte_2 TEXT, empreinte_3 TEXT)");
+            "CREATE TABLE empreintes(empreinte_id INTEGER PRIMARY KEY AUTOINCREMENT, empreinte_1 TEXT, empreinte_2 TEXT, empreinte_3 TEXT)");
         await txn.execute(
             "CREATE TABLE paiements(id INTEGER PRIMARY KEY AUTOINCREMENT, paiement_id TEXT, preuve_1 TEXT, preuve_2 TEXT, preuve_3 TEXT,preuve_4 TEXT, preuve_5 TEXT, preuve_6 TEXT)");
       });
@@ -155,6 +155,24 @@ class DBHelper {
     return map;
   }
 
+  static Future query({String sql}) async {
+    var dbClient = await db;
+    var map;
+
+    try {
+      await dbClient.transaction((txn) async {
+        map = await txn.rawQuery(sql);
+      });
+    } catch (err) {
+      print("error from statment query $err");
+    }
+
+    if (map.isEmpty) {
+      return null;
+    }
+    return map;
+  }
+
   static Future loginUser({Agents user}) async {
     var dbClient = await db;
 
@@ -219,7 +237,7 @@ class DBHelper {
     }
   }
 
-  static Future find({String checkId, String where, String tableName}) async {
+  static Future find({checkId, String where, String tableName}) async {
     var dbClient = await db;
     var map;
     try {
@@ -230,6 +248,7 @@ class DBHelper {
     } catch (e) {
       print("error from check beneficiaire $e");
     }
+    print(map);
     if (map.isNotEmpty) {
       return map;
     } else {

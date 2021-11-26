@@ -1,7 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medpad/helpers/utilities.dart';
+import 'package:medpad/pages/payments/payment_make_page.dart';
+import 'package:medpad/services/api_manager_service.dart';
+import 'package:medpad/services/db_helper_service.dart';
 
 import 'package:page_transition/page_transition.dart';
 
@@ -15,7 +22,8 @@ import 'package:medpad/widgets/user_session.dart';
 import 'widgets/dash_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+  final String agenceName;
+  HomeScreen({Key key, this.agenceName}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -46,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 4.0,
             ),
             Text(
-              "Agence de Kolwezi",
+              "Site de ${widget.agenceName}",
               style: GoogleFonts.lato(
                 fontSize: 18.0,
                 color: Colors.white,
@@ -91,7 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: HomeNavCard(
                           icon: Icons.payments,
                           title: "Paiement agent",
-                          onPressed: () {
+                          onPressed: () async {
+                            //"SELECT beneficiaire_id, photo, signature_capture FROM beneficiaires"
+                            //"SELECT beneficiaire_id, empreinte_1,empreinte_2,empreinte_3 FROM empreintes INNER JOIN beneficiaires ON empreintes.empreinte_id = beneficiaires.empreinte_id"
+                            //"SELECT paiement_id FROM paiements"
+                            //"SELECT paiement_id, preuve_1,preuve_2,preuve_3,preuve_4 FROM paiements"
                             Navigator.push(
                               context,
                               PageTransition(
@@ -147,14 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: "Montant restant",
                           strIcon: "assets/svg/financial-statement.svg",
                           value:
-                              "${apiController.montantGlobalPayer} ${apiController.activite.value.devise}",
+                              "${total != null ? total : 0.0} ${apiController.activite.value.devise}",
                           color: bgColor,
                         ),
                         DashCard(
                           title: "Montant payé",
                           strIcon: "assets/svg/payroll-salary.svg",
                           value:
-                              "$total ${apiController.activite.value.devise}",
+                              "${apiController.montantGlobalPayer} ${apiController.activite.value.devise}",
                           color: Colors.grey[800],
                         ),
                       ],

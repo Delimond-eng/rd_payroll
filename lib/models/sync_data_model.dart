@@ -93,7 +93,7 @@ class Agents {
     data['telephone'] = this.telephone;
     data['pass'] = this.pass;
     data['photo'] = this.photo;
-    ;
+
     data['empreinte_id'] = this.empreinteId;
     return data;
   }
@@ -215,12 +215,6 @@ class Paiements {
     photo = json['photo'];
     signatureCapture = json['signature_capture'];
     ayantDroit = json['ayant_droit'];
-    if (json['empreintes'] != null) {
-      empreintes = new List<Empreintes>();
-      json['empreintes'].forEach((v) {
-        empreintes.add(new Empreintes.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
@@ -241,26 +235,19 @@ class Paiements {
     data['photo'] = this.photo;
     data['signature_capture'] = this.signatureCapture;
     data['ayant_droit'] = this.ayantDroit;
-    if (this.empreintes != null) {
-      data['empreintes'] = this.empreintes.map((v) => v.toJson()).toList();
-    }
+
     return data;
   }
 }
 
 class Empreintes {
-  int id;
   String empreinteId;
   String empreinte1;
   String empreinte2;
   String empreinte3;
 
   Empreintes(
-      {this.id,
-      this.empreinteId,
-      this.empreinte1,
-      this.empreinte2,
-      this.empreinte3});
+      {this.empreinteId, this.empreinte1, this.empreinte2, this.empreinte3});
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['empreinte_id'] = this.empreinteId;
@@ -271,10 +258,9 @@ class Empreintes {
   }
 
   Empreintes.fromJson(Map<String, dynamic> map) {
-    id = map['id'];
+    empreinteId = map['empreinte_id'];
     empreinte1 = map['empreinte_1'];
     empreinte2 = map['empreinte_2'];
     empreinte3 = map['empreinte_3'];
-    empreinteId = map['empreinte_id'];
   }
 }

@@ -466,11 +466,13 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
               decoration: BoxDecoration(
                 color: Colors.cyan,
                 borderRadius: BorderRadius.circular(20.0),
-                image: DecorationImage(
+                /*image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: MemoryImage(
-                      base64Decode(apiController.benefiaire.value.photo)),
-                ),
+                  image: apiController.benefiaire.value.photo.length < 200
+                      ? MemoryImage(
+                          base64Decode(apiController.benefiaire.value.photo))
+                      : null,
+                ),*/
                 boxShadow: [
                   BoxShadow(
                     offset: Offset(0, 4),
@@ -522,6 +524,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
           if (result != null) {
             XDialog.showSuccessAnimation(context);
             apiController.loadDatas();
+            apiSyncController.getDatas();
             Future.delayed(Duration(seconds: 3), () {
               Get.back();
             });

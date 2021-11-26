@@ -99,7 +99,6 @@ class _AgentPageViewState extends State<AgentPageView>
       Xloading.showLottieLoading(context);
 
       Empreintes empreinte = Empreintes(
-        empreinteId: widget.data.empreinteId,
         empreinte1: strFinger1,
         empreinte2: strFinger2,
         empreinte3: strFinger3,

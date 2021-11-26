@@ -63,9 +63,8 @@ class _SearchPageState extends State<SearchPage> {
                                 i.map((model) => Beneficiaire.fromJson(model)));
 
                         beneficiaires.forEach((e) {
-                          if (e.nom
-                                  .toUpperCase()
-                                  .contains(controller.text.toLowerCase()) ||
+                          if (e.nom.toLowerCase() ==
+                                  controller.text.toLowerCase() ||
                               e.matricule == controller.text) {
                             Navigator.push(
                               context,

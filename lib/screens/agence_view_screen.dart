@@ -106,7 +106,9 @@ class _AgenceViewScreenState extends State<AgenceViewScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           PageTransition(
-                              child: HomeScreen(),
+                              child: HomeScreen(
+                                agenceName: data.siteNom,
+                              ),
                               type: PageTransitionType.bottomToTop),
                           (route) => false,
                         );

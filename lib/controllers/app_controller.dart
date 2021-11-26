@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -153,8 +154,10 @@ class AppController extends GetxController {
                                           fingerId = await NativeService
                                               .platform
                                               .invokeMethod(
-                                                  "match_fingers", json);
-                                          if (fingerId.isNotEmpty) {
+                                            "match_fingers",
+                                            json,
+                                          );
+                                          if (fingerId != "0") {
                                             btnController.value.stop();
                                             await apiController
                                                 .findClientByFingerId(
@@ -326,6 +329,30 @@ class AppController extends GetxController {
                                     onPressed: () async {
                                       btnController.value.start();
                                       try {
+                                        await DBHelper.getAllFingers()
+                                            .then((value) async {
+                                          var json = jsonEncode(value);
+
+                                          String fingerId = await NativeService
+                                              .platform
+                                              .invokeMethod(
+                                            "match_fingers",
+                                            json,
+                                          );
+                                          if (fingerId != "0") {
+                                            Get.back();
+                                            appController.closeUsbDevice();
+                                            Get.back();
+                                            Get.back();
+                                            EasyLoading.showToast(
+                                                "Empreinte déjà enrollée sous une autre identité!",
+                                                duration: Duration(seconds: 3),
+                                                toastPosition:
+                                                    EasyLoadingToastPosition
+                                                        .center);
+                                            return;
+                                          }
+                                        });
                                         List<dynamic> list = <dynamic>[];
 
                                         list = await NativeService.platform

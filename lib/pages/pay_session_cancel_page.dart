@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medpad/constants/controllers.dart';
 import 'package:medpad/constants/style.dart';
 import 'package:medpad/helpers/data_storage.dart';
 import 'package:medpad/helpers/utilities.dart';
@@ -192,6 +193,7 @@ class _PaySessionCancelPageState extends State<PaySessionCancelPage> {
                             icon: Icons.warning_rounded,
                             title: "Cloture de la session de paiement!",
                             onValidate: () {
+                              apiSyncController.getDatas();
                               storage.remove("activite_id");
                               Navigator.pushAndRemoveUntil(
                                 context,

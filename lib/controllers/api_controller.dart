@@ -74,6 +74,7 @@ class ApiController extends GetxController {
       await DBHelper.find(
               checkId: fingerId, tableName: "empreintes", where: "empreinte_id")
           .then((res) async {
+        print(res);
         if (res.isNotEmpty) {
           await DBHelper.find(
                   checkId: fingerId,
@@ -110,12 +111,14 @@ class ApiController extends GetxController {
         list.forEach((a) async {
           if (a.activiteId == id) {
             activite.value = list[0];
-            double amount = 0;
+            double amount = 0.0;
             await DBHelper.getPaieReport().then((res) {
-              res.forEach((map) {
-                amount += double.parse(map['netapayer']);
-                montantGlobalPayer.value = amount;
-              });
+              if (res != null) {
+                res.forEach((map) {
+                  amount += double.parse(map['netapayer']) ?? 0;
+                  montantGlobalPayer.value = amount ?? 0.0;
+                });
+              }
             });
           }
         });
