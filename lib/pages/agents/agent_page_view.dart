@@ -34,14 +34,8 @@ class _AgentPageViewState extends State<AgentPageView>
   int _currentStep = 0;
   TabController controller;
 
-  //var image picker
-  PickedFile _imageFile1;
-  PickedFile _imageFile2;
-  final ImagePicker _picker = ImagePicker();
-
   String photo = "";
   String strSignature = "";
-  Uint8List numericSignature;
 
   //finger variables
   String b64F01 = "";
@@ -54,6 +48,7 @@ class _AgentPageViewState extends State<AgentPageView>
   String strFinger3 = "";
 
   SignatureController signatureController;
+  Uint8List numericSignature;
 
   @override
   void initState() {
@@ -103,10 +98,14 @@ class _AgentPageViewState extends State<AgentPageView>
         empreinte2: strFinger2,
         empreinte3: strFinger3,
       );
-      await DBHelper.enregistrerEmpreintes(
+      Beneficiaire _beneficaire = Beneficiaire(
+        beneficiaireId: widget.data.beneficiaireId,
+        photo: photo,
+        signature: strSignature,
+      );
+      await DBHelper.enregistrerAgent(
         empreinte: empreinte,
-        beneficiaire: widget.data,
-        id: widget.data.beneficiaireId,
+        beneficiaire: _beneficaire,
       ).then((value) {
         Xloading.dismiss();
         if (value != null) {
@@ -133,10 +132,8 @@ class _AgentPageViewState extends State<AgentPageView>
       strFinger1 = "";
       strFinger2 = "";
       strFinger3 = "";
-
-      _imageFile1 = null;
-      _imageFile2 = null;
-      numericSignature = null;
+      photo = "";
+      strSignature = "";
     });
   }
 
@@ -445,10 +442,6 @@ class _AgentPageViewState extends State<AgentPageView>
                           strFinger1 = "";
                           strFinger2 = "";
                           strFinger3 = "";
-
-                          _imageFile1 = null;
-                          _imageFile2 = null;
-                          numericSignature = null;
                         });
                       },
                       icon: Icon(
@@ -512,17 +505,24 @@ class _AgentPageViewState extends State<AgentPageView>
                 shadowColor: Colors.black45,
                 child: Material(
                   child: InkWell(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
-                        _imageFile2 = null;
+                        strSignature = "";
                       });
-                      takePhoto(ImageSource.camera, 2);
+                      var pickedFile = await takePhoto(src: ImageSource.camera);
+                      var imageBytes = File(pickedFile.path).readAsBytesSync();
+                      var strImage = base64Encode(imageBytes);
+
+                      setState(() {
+                        strSignature = strImage;
+                      });
                     },
                     child: Container(
-                      decoration: _imageFile2 != null
+                      decoration: strSignature.isNotEmpty
                           ? BoxDecoration(
                               image: DecorationImage(
-                                  image: FileImage(File(_imageFile2.path)),
+                                  image:
+                                      MemoryImage(base64Decode(strSignature)),
                                   fit: BoxFit.cover),
                             )
                           : null,
@@ -532,8 +532,9 @@ class _AgentPageViewState extends State<AgentPageView>
                           alignment: Alignment.center,
                           child: Icon(Icons.add_a_photo_outlined,
                               size: 30.0,
-                              color:
-                                  _imageFile2 != null ? Colors.white : bgColor),
+                              color: strSignature.isNotEmpty
+                                  ? Colors.white
+                                  : bgColor),
                         ),
                       ),
                     ),
@@ -590,19 +591,23 @@ class _AgentPageViewState extends State<AgentPageView>
                 shadowColor: Colors.black45,
                 child: Material(
                   child: InkWell(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
-                        _imageFile1 = null;
+                        photo = "";
                       });
-                      takePhoto(ImageSource.camera, 1);
+                      var pickedFile = await takePhoto(src: ImageSource.camera);
+                      var imageBytes = File(pickedFile.path).readAsBytesSync();
+                      var strImage = base64Encode(imageBytes);
+
+                      setState(() {
+                        photo = strImage;
+                      });
                     },
                     child: Container(
-                      decoration: _imageFile1 != null
+                      decoration: photo.isNotEmpty
                           ? BoxDecoration(
                               image: DecorationImage(
-                                  image: FileImage(
-                                    File(_imageFile1.path),
-                                  ),
+                                  image: MemoryImage(base64Decode(photo)),
                                   fit: BoxFit.cover),
                             )
                           : null,
@@ -613,7 +618,7 @@ class _AgentPageViewState extends State<AgentPageView>
                           child: Icon(
                             Icons.add_a_photo_outlined,
                             size: 30.0,
-                            color: _imageFile1 != null ? Colors.white : bgColor,
+                            color: photo.isNotEmpty ? Colors.white : bgColor,
                           ),
                         ),
                       ),
@@ -768,27 +773,5 @@ class _AgentPageViewState extends State<AgentPageView>
     final signature = await exportController.toPngBytes();
     exportController.dispose();
     return signature;
-  }
-
-  void takePhoto(ImageSource source, int imageNumber) async {
-    final pickedFile = await _picker.getImage(
-        source: source, maxHeight: 200, maxWidth: 200, imageQuality: 50);
-
-    switch (imageNumber) {
-      case 1:
-        var bytes = File(pickedFile.path).readAsBytesSync();
-        setState(() {
-          _imageFile1 = pickedFile;
-          photo = base64Encode(bytes);
-        });
-        break;
-      case 2:
-        var bytes = File(pickedFile.path).readAsBytesSync();
-        setState(() {
-          _imageFile2 = pickedFile;
-          strSignature = base64Encode(bytes);
-        });
-        break;
-    }
   }
 }

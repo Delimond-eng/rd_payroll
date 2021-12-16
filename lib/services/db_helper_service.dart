@@ -194,8 +194,8 @@ class DBHelper {
         .query("agents", where: "agent_id=?", whereArgs: [userId]);
   }
 
-  static Future enregistrerEmpreintes(
-      {Empreintes empreinte, Beneficiaire beneficiaire, String id}) async {
+  static Future enregistrerAgent(
+      {Empreintes empreinte, Beneficiaire beneficiaire}) async {
     var dbClient = await db;
     int lastUpdateId;
 
@@ -204,8 +204,14 @@ class DBHelper {
         int empreinteId = await txn.insert("empreintes", empreinte.toJson());
         if (empreinteId != null) {
           lastUpdateId = await txn.rawUpdate(
-              "UPDATE beneficiaires SET empreinte_id = ?, photo = ?, signature_capture = ? WHERE beneficiaire_id=?",
-              ['$empreinteId', beneficiaire.photo, beneficiaire.signature, id]);
+            "UPDATE beneficiaires SET empreinte_id = ?, photo = ?, signature_capture = ? WHERE beneficiaire_id=?",
+            [
+              empreinteId.toString(),
+              beneficiaire.photo,
+              beneficiaire.signature,
+              beneficiaire.beneficiaireId,
+            ],
+          );
         }
       });
     } catch (err) {

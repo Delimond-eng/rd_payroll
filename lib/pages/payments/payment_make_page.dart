@@ -72,7 +72,7 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
                             SizedBox(
                               width: 8.0,
                             ),
-                            Text("Agent informations",
+                            Text("Bénéficiaire informations",
                                 style: GoogleFonts.lato(color: Colors.white)),
                           ],
                         ),
@@ -466,13 +466,13 @@ class _PaymentFoundPageState extends State<PaymentFoundPage> {
               decoration: BoxDecoration(
                 color: Colors.cyan,
                 borderRadius: BorderRadius.circular(20.0),
-                /*image: DecorationImage(
+                image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: apiController.benefiaire.value.photo.length < 200
+                  image: apiController.benefiaire.value.photo.length > 200
                       ? MemoryImage(
                           base64Decode(apiController.benefiaire.value.photo))
                       : null,
-                ),*/
+                ),
                 boxShadow: [
                   BoxShadow(
                     offset: Offset(0, 4),

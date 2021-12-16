@@ -206,9 +206,11 @@ class XDialog {
           Text("$title"),
         ],
       ),
-      content: Text(
-        "$content",
-        textAlign: TextAlign.center,
+      content: Center(
+        child: Text(
+          "$content",
+          textAlign: TextAlign.center,
+        ),
       ),
       actions: [
         cancelButton,

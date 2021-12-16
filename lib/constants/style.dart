@@ -74,14 +74,11 @@ List<String> gStrSplitParser(String date) {
   return strList;
 }
 
-Future<PickedFile> takePhoto() async {
+Future<PickedFile> takePhoto({ImageSource src}) async {
   final ImagePicker _picker = ImagePicker();
   // ignore: deprecated_member_use
   final pickedFile = await _picker.getImage(
-      source: ImageSource.camera,
-      maxHeight: 400,
-      maxWidth: 400,
-      imageQuality: 70);
+      source: src, maxHeight: 400, maxWidth: 400, imageQuality: 70);
 
   if (pickedFile != null) {
     return pickedFile;

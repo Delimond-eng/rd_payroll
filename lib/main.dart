@@ -24,6 +24,7 @@ void main() async {
   await GetStorage.init();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
   Get.put(ApiController());
   Get.put(ApiSyncController());

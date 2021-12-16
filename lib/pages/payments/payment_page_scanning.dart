@@ -59,40 +59,55 @@ class _PaymentPageViewState extends State<PaymentPageView> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20.0),
                               onTap: () async {
-                                appController.showScan(
-                                  context,
-                                  onSuccess: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: PaymentFoundPage(),
-                                        fullscreenDialog: true,
-                                        type: PageTransitionType
-                                            .leftToRightWithFade,
-                                      ),
-                                    );
-                                  },
-                                  onFailed: () {
-                                    XDialog.show(
-                                        context: context,
-                                        icon: CupertinoIcons
-                                            .person_crop_circle_fill_badge_exclam,
-                                        title: "Agent non reconnue !",
-                                        content:
-                                            "Les empreintes de cet agent n'existent pas dans le système,\nveuillez cliquer sur valider pour rechercher cet agent dans le système !",
-                                        onValidate: () {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                              child: SearchPage(),
-                                              fullscreenDialog: true,
-                                              type: PageTransitionType
-                                                  .leftToRightWithFade,
-                                            ),
-                                          );
-                                        });
-                                  },
-                                );
+                                appController.showScan(context, onSuccess: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: PaymentFoundPage(),
+                                      fullscreenDialog: true,
+                                      type: PageTransitionType
+                                          .leftToRightWithFade,
+                                    ),
+                                  );
+                                }, onFailed: () {
+                                  XDialog.show(
+                                      context: context,
+                                      icon: CupertinoIcons
+                                          .person_crop_circle_fill_badge_exclam,
+                                      title: "Bénéficiaire non reconnue !",
+                                      content:
+                                          "Les empreintes de cet bénéficiaire n'ont pas été enregistré dans le système,\nveuillez cliquer VALIDER pour rechercher cet bénéficiaire dans le système !",
+                                      onValidate: () {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: SearchPage(),
+                                            fullscreenDialog: true,
+                                            type: PageTransitionType
+                                                .leftToRightWithFade,
+                                          ),
+                                        );
+                                      });
+                                }, onEmpty: () {
+                                  XDialog.show(
+                                      context: context,
+                                      icon: CupertinoIcons
+                                          .person_crop_circle_fill_badge_exclam,
+                                      title: "Aucune empreinte trouvé !",
+                                      content:
+                                          "Aucune empreinte n'a été trouvé pour effectuer un scan du bénéficaire\nveuillez cliquer sur VALIDER pour rechercher un bénéficiaire et enregistrer ses empreintes !",
+                                      onValidate: () {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: SearchPage(),
+                                            fullscreenDialog: true,
+                                            type: PageTransitionType
+                                                .leftToRightWithFade,
+                                          ),
+                                        );
+                                      });
+                                });
                               },
                               child: Container(
                                 child: Center(

@@ -159,14 +159,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: "Montant restant",
                           strIcon: "assets/svg/financial-statement.svg",
                           value:
-                              "${total != null ? total : 0.0} ${apiController.activite.value.devise}",
+                              "$total ${apiController.activite.value.devise}" ??
+                                  "0.00 ${apiController.activite.value.devise}",
                           color: bgColor,
                         ),
                         DashCard(
                           title: "Montant payé",
                           strIcon: "assets/svg/payroll-salary.svg",
                           value:
-                              "${apiController.montantGlobalPayer} ${apiController.activite.value.devise}",
+                              "${apiController.montantGlobalPayer} ${apiController.activite.value.devise}" ??
+                                  "0.00  ${apiController.activite.value.devise}",
                           color: Colors.grey[800],
                         ),
                       ],

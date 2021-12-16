@@ -56,7 +56,7 @@ class AppController extends GetxController {
   var isFounded = false.obs;
 
   Future<dynamic> showScan(BuildContext context,
-      {Function onSuccess, Function onFailed}) async {
+      {Function onSuccess, Function onFailed, Function onEmpty}) async {
     openUsbDevice();
     showDialog(
       barrierDismissible: false,
@@ -149,31 +149,39 @@ class AppController extends GetxController {
                                       try {
                                         await DBHelper.getAllFingers()
                                             .then((value) async {
-                                          var json = jsonEncode(value);
-
-                                          fingerId = await NativeService
-                                              .platform
-                                              .invokeMethod(
-                                            "match_fingers",
-                                            json,
-                                          );
-                                          if (fingerId != "0") {
-                                            btnController.value.stop();
-                                            await apiController
-                                                .findClientByFingerId(
-                                                    fingerId: fingerId)
-                                                .then((value) {
-                                              if (value == "success") {
-                                                Get.back();
-                                                onSuccess();
-                                                appController.closeUsbDevice();
-                                              }
-                                            });
-                                          } else {
+                                          if (value == null) {
                                             Get.back();
                                             btnController.value.stop();
                                             appController.closeUsbDevice();
-                                            onFailed();
+                                            onEmpty();
+                                          } else {
+                                            var json = jsonEncode(value);
+
+                                            fingerId = await NativeService
+                                                .platform
+                                                .invokeMethod(
+                                              "match_fingers",
+                                              json,
+                                            );
+                                            if (fingerId != "0") {
+                                              btnController.value.stop();
+                                              await apiController
+                                                  .findClientByFingerId(
+                                                      fingerId: fingerId)
+                                                  .then((value) {
+                                                if (value == "success") {
+                                                  Get.back();
+                                                  onSuccess();
+                                                  appController
+                                                      .closeUsbDevice();
+                                                }
+                                              });
+                                            } else {
+                                              Get.back();
+                                              btnController.value.stop();
+                                              appController.closeUsbDevice();
+                                              onFailed();
+                                            }
                                           }
                                         });
                                       } catch (err) {
@@ -331,26 +339,31 @@ class AppController extends GetxController {
                                       try {
                                         await DBHelper.getAllFingers()
                                             .then((value) async {
-                                          var json = jsonEncode(value);
+                                          if (value != null) {
+                                            var json = jsonEncode(value);
 
-                                          String fingerId = await NativeService
-                                              .platform
-                                              .invokeMethod(
-                                            "match_fingers",
-                                            json,
-                                          );
-                                          if (fingerId != "0") {
-                                            Get.back();
-                                            appController.closeUsbDevice();
-                                            Get.back();
-                                            Get.back();
-                                            EasyLoading.showToast(
-                                                "Empreinte déjà enrollée sous une autre identité!",
-                                                duration: Duration(seconds: 3),
-                                                toastPosition:
-                                                    EasyLoadingToastPosition
-                                                        .center);
-                                            return;
+                                            String fingerId =
+                                                await NativeService.platform
+                                                    .invokeMethod(
+                                              "match_fingers",
+                                              json,
+                                            );
+                                            if (fingerId != "0") {
+                                              Get.back();
+                                              appController.closeUsbDevice();
+                                              Get.back();
+                                              Get.back();
+                                              EasyLoading.showToast(
+                                                  "Empreinte déjà enrollée sous une autre identité!",
+                                                  duration:
+                                                      Duration(seconds: 3),
+                                                  toastPosition:
+                                                      EasyLoadingToastPosition
+                                                          .center);
+                                              return;
+                                            }
+                                          } else {
+                                            print("empty fingers !");
                                           }
                                         });
                                         List<dynamic> list = <dynamic>[];
